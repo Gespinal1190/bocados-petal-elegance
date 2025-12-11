@@ -111,7 +111,7 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center px-8 py-3 bg-primary text-primary-foreground rounded-full font-medium transition-all duration-300 hover:scale-105;
+    @apply inline-flex items-center justify-center px-8 py-3 bg-primary text-primary-foreground rounded-full font-semibold transition-all duration-300 hover:scale-105;
     box-shadow: var(--shadow-soft);
   }
 
@@ -120,7 +120,7 @@
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center px-8 py-3 border-2 border-primary text-foreground rounded-full font-medium transition-all duration-300 hover:bg-primary hover:text-primary-foreground;
+    @apply inline-flex items-center justify-center px-8 py-3 border-2 border-primary text-foreground rounded-full font-semibold transition-all duration-300 hover:bg-primary hover:text-primary-foreground;
   }
 
   .gold-accent {
@@ -134,7 +134,7 @@
   .divider-flower::before,
   .divider-flower::after {
     content: '';
-    @apply h-px w-16 md:w-24 bg-border;
+    @apply h-px w-16 md:w-24 bg-primary/30;
   }
 }
 
