@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import dishCrepe from "@/assets/dish-crepe.jpg";
 import dishWaffle from "@/assets/dish-waffle.jpg";
 import dishEntrecot from "@/assets/dish-entrecot.jpg";
@@ -65,11 +66,18 @@ const menuItems: MenuItems = {
 
 const Menu = () => {
   const [activeCategory, setActiveCategory] = useState("desayunos");
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: tabsRef, isVisible: tabsVisible } = useScrollAnimation();
 
   return (
-    <section id="menu" className="section-padding bg-cream">
+    <section id="menu" className="section-padding bg-cream overflow-hidden">
       <div className="container-custom px-4">
-        <div className="text-center mb-12">
+        <div 
+          ref={headerRef}
+          className={`text-center mb-12 transition-all duration-700 ${
+            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           <span className="text-sm font-medium tracking-widest uppercase text-primary">
             Nuestra Carta
           </span>
@@ -82,7 +90,12 @@ const Menu = () => {
         </div>
 
         {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-12">
+        <div 
+          ref={tabsRef}
+          className={`flex flex-wrap justify-center gap-3 md:gap-4 mb-12 transition-all duration-700 delay-200 ${
+            tabsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           {categories.map((category) => (
             <button
               key={category.id}
@@ -90,7 +103,7 @@ const Menu = () => {
               className={`px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${
                 activeCategory === category.id
                   ? "bg-primary text-primary-foreground shadow-lg scale-105"
-                  : "bg-card text-muted-foreground hover:bg-rose-light hover:text-foreground border border-border"
+                  : "bg-card text-muted-foreground hover:bg-rose-light hover:text-foreground border border-border hover:-translate-y-0.5"
               }`}
             >
               {category.label}
@@ -102,9 +115,9 @@ const Menu = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {menuItems[activeCategory].map((item, index) => (
             <div
-              key={index}
-              className="bg-card rounded-2xl overflow-hidden group hover:shadow-xl transition-all duration-500 border border-border/50"
-              style={{ animationDelay: `${index * 100}ms` }}
+              key={`${activeCategory}-${index}`}
+              className="bg-card rounded-2xl overflow-hidden group hover:shadow-xl transition-all duration-500 border border-border/50 animate-scale-in hover:-translate-y-2"
+              style={{ animationDelay: `${index * 80}ms` }}
             >
               <div className="relative h-52 overflow-hidden">
                 <img
