@@ -28,7 +28,7 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container-custom px-4 text-center pt-20">
+      <div className="relative z-10 container-custom px-4 text-center pt-28 md:pt-20">
         <div className="max-w-3xl mx-auto space-y-6">
           <span 
             className="inline-block text-sm font-medium tracking-widest uppercase text-rose-light px-4 py-2 bg-primary/20 backdrop-blur-sm rounded-full border border-primary/30 animate-fade-in opacity-0"
@@ -81,7 +81,7 @@ const Hero = () => {
             </a>
             <a
               href="#ubicacion"
-              className="inline-flex items-center gap-2 text-primary-foreground/80 hover:text-primary-foreground transition-all duration-300 font-medium hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 text-primary-foreground/80 hover:text-primary-foreground transition-all duration-300 font-medium hover:-translate-y-0.5 mt-2 sm:mt-0 sm:ml-2"
             >
               <MapPin className="w-5 h-5" />
               Ubicación
