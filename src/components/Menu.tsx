@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { supabase } from "@/integrations/supabase/client";
 import dishCrepe from "@/assets/dish-crepe.jpg";
 import dishWaffle from "@/assets/dish-waffle.jpg";
 import dishEntrecot from "@/assets/dish-entrecot.jpg";
@@ -26,48 +27,66 @@ const categories = [
 ];
 
 type MenuItem = {
+  id: string;
   name: string;
   description: string;
-  image: string;
+  price: number | null;
+  image_url: string | null;
+  category: string;
 };
 
-type MenuItems = {
-  [key: string]: MenuItem[];
-};
-
-const menuItems: MenuItems = {
-  desayunos: [
-    { name: "Tostadas Variadas", description: "Con tomate, aguacate, jamón o mermelada artesanal", image: dishToast },
-    { name: "Bollería del Día", description: "Croissants, napolitanas y más, recién horneados", image: dishPastry },
-    { name: "Café de Especialidad", description: "Espresso, cappuccino, latte art", image: coffeeSpecialty },
-    { name: "Zumos Naturales", description: "Naranja, manzana, zanahoria y combinados", image: dishJuice },
-  ],
-  comidas: [
-    { name: "Ensaladas Frescas", description: "Mediterránea, César, quinoa y más", image: dishSalad },
-    { name: "Pastas Artesanales", description: "Carbonara, boloñesa, pesto genovés", image: dishPasta },
-    { name: "Burgers Gourmet", description: "Con ingredientes premium y pan artesanal", image: dishBurger },
-    { name: "Entrecot a la Brasa", description: "Corte premium con guarnición a elegir", image: dishEntrecot },
-    { name: "Pulpa Selecta", description: "Preparación especial de la casa", image: dishPulpo },
-    { name: "Tapas Variadas", description: "Selección de tapas tradicionales y creativas", image: dishTapas },
-  ],
-  bebidas: [
-    { name: "Cafés Especiales", description: "Espresso, americano, cortado, con leche", image: coffeeSpecialty },
-    { name: "Smoothies", description: "Fresa, tropical, verde detox", image: drinkSmoothie },
-    { name: "Refrescos", description: "Bebidas artesanales y clásicos", image: drinkBeverages },
-    { name: "Vinos y Cervezas", description: "Selección de vinos locales y cervezas craft", image: drinkWine },
-  ],
-  postres: [
-    { name: "Crepes Dulces", description: "Con nutella, frutas, nata o helado", image: dishCrepe },
-    { name: "Gofres Belgas", description: "Crujientes con toppings variados", image: dishWaffle },
-    { name: "Postres Artesanales", description: "Tartas, coulants y creaciones del día", image: dishDessert },
-    { name: "Helados", description: "Sabores tradicionales y especiales", image: dishIcecream },
-  ],
+// Fallback images for items without custom images
+const fallbackImages: Record<string, string> = {
+  "Tostadas Variadas": dishToast,
+  "Bollería del Día": dishPastry,
+  "Café de Especialidad": coffeeSpecialty,
+  "Zumos Naturales": dishJuice,
+  "Ensaladas Frescas": dishSalad,
+  "Pastas Artesanales": dishPasta,
+  "Burgers Gourmet": dishBurger,
+  "Entrecot a la Brasa": dishEntrecot,
+  "Pulpo Selecta": dishPulpo,
+  "Tapas Variadas": dishTapas,
+  "Cafés Especiales": coffeeSpecialty,
+  "Smoothies": drinkSmoothie,
+  "Refrescos": drinkBeverages,
+  "Vinos y Cervezas": drinkWine,
+  "Crepes Dulces": dishCrepe,
+  "Gofres Belgas": dishWaffle,
+  "Postres Artesanales": dishDessert,
+  "Helados": dishIcecream,
 };
 
 const Menu = () => {
   const [activeCategory, setActiveCategory] = useState("desayunos");
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: tabsRef, isVisible: tabsVisible } = useScrollAnimation();
+
+  useEffect(() => {
+    const fetchMenuItems = async () => {
+      const { data, error } = await supabase
+        .from("menu_items")
+        .select("*")
+        .eq("is_active", true)
+        .order("sort_order");
+
+      if (!error && data) {
+        setMenuItems(data);
+      }
+      setLoading(false);
+    };
+
+    fetchMenuItems();
+  }, []);
+
+  const getItemImage = (item: MenuItem) => {
+    if (item.image_url) return item.image_url;
+    return fallbackImages[item.name] || dishCrepe;
+  };
+
+  const filteredItems = menuItems.filter((item) => item.category === activeCategory);
 
   return (
     <section id="menu" className="section-padding bg-cream overflow-hidden">
@@ -112,32 +131,43 @@ const Menu = () => {
         </div>
 
         {/* Menu Items Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
-          {menuItems[activeCategory].map((item, index) => (
-            <div
-              key={`${activeCategory}-${index}`}
-              className="bg-card rounded-2xl overflow-hidden group hover:shadow-xl transition-all duration-500 border border-border/50 animate-scale-in hover:-translate-y-2"
-              style={{ animationDelay: `${index * 80}ms` }}
-            >
-              <div className="relative h-52 overflow-hidden">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        {loading ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Cargando menú...</p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            {filteredItems.map((item, index) => (
+              <div
+                key={item.id}
+                className="bg-card rounded-2xl overflow-hidden group hover:shadow-xl transition-all duration-500 border border-border/50 animate-scale-in hover:-translate-y-2"
+                style={{ animationDelay: `${index * 80}ms` }}
+              >
+                <div className="relative h-52 overflow-hidden">
+                  <img
+                    src={getItemImage(item)}
+                    alt={item.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  {item.price && (
+                    <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                      {item.price.toFixed(2)}€
+                    </div>
+                  )}
+                </div>
+                <div className="p-5">
+                  <h3 className="font-display text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
+                    {item.name}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
               </div>
-              <div className="p-5">
-                <h3 className="font-display text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-                  {item.name}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         <div className="text-center mt-12">
           <div className="inline-block bg-muted/50 px-6 py-3 rounded-full">
