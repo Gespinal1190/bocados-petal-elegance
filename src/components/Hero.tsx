@@ -20,6 +20,9 @@ const Hero = () => {
           src={heroImage}
           alt="Interior del restaurante Bocados Restobar con pared de flores rosadas"
           className="w-full h-full object-cover"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/70 via-foreground/50 to-foreground/80" />
       </div>
