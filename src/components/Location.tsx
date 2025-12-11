@@ -1,4 +1,5 @@
 import { MapPin, Phone, Clock } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 const scheduleData = [
   { days: "Lunes a Sábado", hours: "09:30 – 23:00" },
@@ -6,10 +7,19 @@ const scheduleData = [
 ];
 
 const Location = () => {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: cardsRef, isVisible: cardsVisible } = useScrollAnimation({ threshold: 0.2 });
+  const { ref: mapRef, isVisible: mapVisible } = useScrollAnimation({ threshold: 0.2 });
+
   return (
-    <section id="ubicacion" className="section-padding">
+    <section id="ubicacion" className="section-padding overflow-hidden">
       <div className="container-custom px-4">
-        <div className="text-center mb-12">
+        <div 
+          ref={headerRef}
+          className={`text-center mb-12 transition-all duration-700 ${
+            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           <span className="text-sm font-medium tracking-widest uppercase text-primary">
             Encuéntranos
           </span>
@@ -23,53 +33,35 @@ const Location = () => {
 
         <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {/* Info Cards */}
-          <div className="space-y-6">
-            <div className="card-elegant">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <MapPin className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-2">
-                    Dirección
-                  </h3>
+          <div ref={cardsRef} className="space-y-6">
+            {[
+              {
+                icon: MapPin,
+                title: "Dirección",
+                content: (
                   <p className="text-muted-foreground">
                     Carrer dels Caputxins, 4<br />
                     08800 Vilanova i la Geltrú<br />
                     Barcelona, España
                   </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="card-elegant">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Phone className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-2">
-                    Teléfono
-                  </h3>
+                ),
+              },
+              {
+                icon: Phone,
+                title: "Teléfono",
+                content: (
                   <a
                     href="tel:+34931427406"
                     className="text-primary hover:underline text-lg"
                   >
                     +34 931 42 74 06
                   </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="card-elegant">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Clock className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3">
-                    Horarios
-                  </h3>
+                ),
+              },
+              {
+                icon: Clock,
+                title: "Horarios",
+                content: (
                   <div className="space-y-2">
                     {scheduleData.map((schedule, index) => (
                       <div key={index} className="flex justify-between text-sm">
@@ -78,13 +70,38 @@ const Location = () => {
                       </div>
                     ))}
                   </div>
+                ),
+              },
+            ].map((item, index) => (
+              <div 
+                key={index}
+                className={`card-elegant transition-all duration-700 hover:-translate-y-1 hover:shadow-lg ${
+                  cardsVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+                }`}
+                style={{ transitionDelay: `${index * 150}ms` }}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <item.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-xl font-semibold text-foreground mb-2">
+                      {item.title}
+                    </h3>
+                    {item.content}
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
 
           {/* Map */}
-          <div className="card-elegant p-0 overflow-hidden h-[400px] lg:h-auto">
+          <div 
+            ref={mapRef}
+            className={`card-elegant p-0 overflow-hidden h-[400px] lg:h-auto transition-all duration-1000 ${
+              mapVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
+            }`}
+          >
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2994.454885770531!2d1.721627!3d41.2239686!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a381f1492a7533%3A0x6aa1bb7f7159cd79!2sBocados%20Restobar!5e0!3m2!1ses!2ses!4v1700000000000!5m2!1ses!2ses"
               width="100%"

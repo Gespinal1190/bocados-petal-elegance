@@ -1,3 +1,4 @@
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import heroImage from "@/assets/hero-restaurant.jpg";
 import dishCrepe from "@/assets/dish-crepe.jpg";
 import dishWaffle from "@/assets/dish-waffle.jpg";
@@ -19,10 +20,18 @@ const galleryImages = [
 ];
 
 const Gallery = () => {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation({ threshold: 0.1 });
+
   return (
-    <section id="galeria" className="section-padding bg-muted/30">
+    <section id="galeria" className="section-padding bg-muted/30 overflow-hidden">
       <div className="container-custom px-4">
-        <div className="text-center mb-12">
+        <div 
+          ref={headerRef}
+          className={`text-center mb-12 transition-all duration-700 ${
+            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           <span className="text-sm font-medium tracking-widest uppercase text-primary">
             Nuestro Espacio
           </span>
@@ -34,11 +43,17 @@ const Gallery = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-6xl mx-auto auto-rows-[200px] md:auto-rows-[220px]">
+        <div 
+          ref={gridRef}
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-6xl mx-auto auto-rows-[200px] md:auto-rows-[220px]"
+        >
           {galleryImages.map((image, index) => (
             <div
               key={index}
-              className={`relative overflow-hidden rounded-2xl group cursor-pointer ${image.span}`}
+              className={`relative overflow-hidden rounded-2xl group cursor-pointer ${image.span} transition-all duration-700 ${
+                gridVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
               <img
                 src={image.src}
@@ -46,7 +61,7 @@ const Gallery = () => {
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                <p className="text-primary-foreground text-sm font-medium drop-shadow-lg">
+                <p className="text-primary-foreground text-sm font-medium drop-shadow-lg translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                   {image.alt}
                 </p>
               </div>
