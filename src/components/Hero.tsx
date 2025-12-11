@@ -62,7 +62,7 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div 
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6 animate-fade-in opacity-0"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6 pb-16 md:pb-8 animate-fade-in opacity-0"
             style={{ animationDelay: '1s', animationFillMode: 'forwards' }}
           >
             <a 
