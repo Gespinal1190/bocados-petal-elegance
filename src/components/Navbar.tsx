@@ -6,6 +6,7 @@ const navLinks = [
   { href: "#nosotros", label: "Nosotros" },
   { href: "#menu", label: "Menú" },
   { href: "#galeria", label: "Galería" },
+  { href: "#reservas", label: "Reservas" },
   { href: "#ubicacion", label: "Ubicación" },
   { href: "#contacto", label: "Contacto" },
 ];
