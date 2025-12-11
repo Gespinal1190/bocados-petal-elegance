@@ -1,4 +1,5 @@
-import { MapPin, Phone } from "lucide-react";
+import { MapPin, Phone, Lock } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -33,10 +34,17 @@ const Footer = () => {
           </nav>
         </div>
 
-        <div className="border-t border-primary-foreground/10 mt-8 pt-8 text-center">
+        <div className="border-t border-primary-foreground/10 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-primary-foreground/60">
             © {currentYear} Bocados Restobar – Todos los derechos reservados.
           </p>
+          <Link 
+            to="/auth" 
+            className="text-xs text-primary-foreground/40 hover:text-primary-foreground/60 transition-colors flex items-center gap-1"
+          >
+            <Lock className="w-3 h-3" />
+            Admin
+          </Link>
         </div>
       </div>
     </footer>
