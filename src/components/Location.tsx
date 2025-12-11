@@ -1,15 +1,48 @@
+import { useState, useEffect } from "react";
 import { MapPin, Phone, Clock } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
-
-const scheduleData = [
-  { days: "Lunes a Sábado", hours: "09:30 – 23:00" },
-  { days: "Domingo", hours: "10:00 – 23:00" },
-];
+import { supabase } from "@/integrations/supabase/client";
 
 const Location = () => {
+  const [settings, setSettings] = useState({
+    phone: "+34 931 42 74 06",
+    address: "Carrer dels Caputxins, 4, 08800 Vilanova i la Geltrú, Barcelona",
+    schedule_weekdays: "09:30 – 23:00",
+    schedule_sunday: "10:00 – 23:00",
+  });
+
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: cardsRef, isVisible: cardsVisible } = useScrollAnimation({ threshold: 0.2 });
   const { ref: mapRef, isVisible: mapVisible } = useScrollAnimation({ threshold: 0.2 });
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const { data } = await supabase.from("site_settings").select("*");
+      if (data) {
+        const settingsMap: Record<string, string> = {};
+        data.forEach((item) => {
+          settingsMap[item.key] = item.value;
+        });
+        setSettings({
+          phone: settingsMap.phone || settings.phone,
+          address: settingsMap.address || settings.address,
+          schedule_weekdays: settingsMap.schedule_weekdays || settings.schedule_weekdays,
+          schedule_sunday: settingsMap.schedule_sunday || settings.schedule_sunday,
+        });
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  const scheduleData = [
+    { days: "Lunes a Sábado", hours: settings.schedule_weekdays },
+    { days: "Domingo", hours: settings.schedule_sunday },
+  ];
+
+  const addressParts = settings.address.split(",");
+  const street = addressParts[0]?.trim() || "";
+  const cityZip = addressParts.slice(1, 3).join(",").trim() || "";
+  const country = addressParts.slice(3).join(",").trim() || "España";
 
   return (
     <section id="ubicacion" className="section-padding overflow-hidden">
@@ -40,9 +73,9 @@ const Location = () => {
                 title: "Dirección",
                 content: (
                   <p className="text-muted-foreground">
-                    Carrer dels Caputxins, 4<br />
-                    08800 Vilanova i la Geltrú<br />
-                    Barcelona, España
+                    {street}<br />
+                    {cityZip}<br />
+                    {country}
                   </p>
                 ),
               },
@@ -51,10 +84,10 @@ const Location = () => {
                 title: "Teléfono",
                 content: (
                   <a
-                    href="tel:+34931427406"
+                    href={`tel:${settings.phone.replace(/\s/g, "")}`}
                     className="text-primary hover:underline text-lg"
                   >
-                    +34 931 42 74 06
+                    {settings.phone}
                   </a>
                 ),
               },

@@ -1,10 +1,38 @@
+import { useState, useEffect } from "react";
 import { Phone, Mail, MapPin, ExternalLink } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
+  const [settings, setSettings] = useState({
+    phone: "+34 931 42 74 06",
+    email: "info@bocadosrestobar.com",
+    address: "Carrer dels Caputxins, 4, Vilanova i la Geltrú",
+  });
+
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: cardsRef, isVisible: cardsVisible } = useScrollAnimation({ threshold: 0.2 });
   const { ref: buttonsRef, isVisible: buttonsVisible } = useScrollAnimation();
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const { data } = await supabase.from("site_settings").select("*");
+      if (data) {
+        const settingsMap: Record<string, string> = {};
+        data.forEach((item) => {
+          settingsMap[item.key] = item.value;
+        });
+        setSettings({
+          phone: settingsMap.phone || settings.phone,
+          email: settingsMap.email || settings.email,
+          address: settingsMap.address || settings.address,
+        });
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  const shortAddress = settings.address.split(",").slice(0, 2).join(",");
 
   const contactItems = [
     {
@@ -12,24 +40,31 @@ const Contact = () => {
       title: "Teléfono",
       content: (
         <a
-          href="tel:+34931427406"
+          href={`tel:${settings.phone.replace(/\s/g, "")}`}
           className="text-muted-foreground hover:text-primary transition-colors"
         >
-          +34 931 42 74 06
+          {settings.phone}
         </a>
       ),
     },
     {
       icon: Mail,
       title: "Email",
-      content: <span className="text-muted-foreground">info@bocadosrestobar.com</span>,
+      content: (
+        <a
+          href={`mailto:${settings.email}`}
+          className="text-muted-foreground hover:text-primary transition-colors"
+        >
+          {settings.email}
+        </a>
+      ),
     },
     {
       icon: MapPin,
       title: "Dirección",
       content: (
         <span className="text-muted-foreground text-sm">
-          Carrer dels Caputxins, 4<br />Vilanova i la Geltrú
+          {shortAddress}
         </span>
       ),
     },
@@ -91,7 +126,7 @@ const Contact = () => {
               buttonsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
           >
-            <a href="tel:+34931427406" className="btn-primary w-full sm:w-auto hover:-translate-y-1 transition-transform">
+            <a href={`tel:${settings.phone.replace(/\s/g, "")}`} className="btn-primary w-full sm:w-auto hover:-translate-y-1 transition-transform">
               <Phone className="w-4 h-4 mr-2" />
               Llamar Ahora
             </a>

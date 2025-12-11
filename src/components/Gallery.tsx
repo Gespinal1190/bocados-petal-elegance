@@ -1,4 +1,6 @@
+import { useState, useEffect } from "react";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { supabase } from "@/integrations/supabase/client";
 import heroImage from "@/assets/hero-restaurant.jpg";
 import dishCrepe from "@/assets/dish-crepe.jpg";
 import dishWaffle from "@/assets/dish-waffle.jpg";
@@ -8,7 +10,13 @@ import dishToast from "@/assets/dish-toast.jpg";
 import dishPulpo from "@/assets/dish-pulpo.jpg";
 import dishBurger from "@/assets/dish-burger.jpg";
 
-const galleryImages = [
+type GalleryImage = {
+  id: string;
+  image_url: string;
+  alt_text: string | null;
+};
+
+const defaultImages = [
   { src: heroImage, alt: "Interior del restaurante con pared de flores rosadas", span: "col-span-2 row-span-2" },
   { src: dishCrepe, alt: "Crepes con frutas frescas", span: "" },
   { src: coffeeSpecialty, alt: "Café latte art", span: "" },
@@ -19,9 +27,38 @@ const galleryImages = [
   { src: dishBurger, alt: "Burger gourmet", span: "" },
 ];
 
+const spanClasses = ["col-span-2 row-span-2", "", "", "col-span-2", "", "", "", ""];
+
 const Gallery = () => {
+  const [images, setImages] = useState<GalleryImage[]>([]);
+  const [useDatabase, setUseDatabase] = useState(false);
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation({ threshold: 0.1 });
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      const { data, error } = await supabase
+        .from("gallery_images")
+        .select("*")
+        .eq("is_active", true)
+        .order("sort_order");
+
+      if (!error && data && data.length > 0) {
+        setImages(data);
+        setUseDatabase(true);
+      }
+    };
+
+    fetchImages();
+  }, []);
+
+  const displayImages = useDatabase
+    ? images.map((img, i) => ({
+        src: img.image_url,
+        alt: img.alt_text || "Imagen del restaurante",
+        span: spanClasses[i % spanClasses.length],
+      }))
+    : defaultImages;
 
   return (
     <section id="galeria" className="section-padding bg-muted/30 overflow-hidden">
@@ -47,7 +84,7 @@ const Gallery = () => {
           ref={gridRef}
           className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-6xl mx-auto auto-rows-[200px] md:auto-rows-[220px]"
         >
-          {galleryImages.map((image, index) => (
+          {displayImages.map((image, index) => (
             <div
               key={index}
               className={`relative overflow-hidden rounded-2xl group cursor-pointer ${image.span} transition-all duration-700 ${
