@@ -17,22 +17,36 @@ const authSchema = z.object({
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [isRecoveryMode, setIsRecoveryMode] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user, isAdmin, isLoading, signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
+  // Detectar si el usuario viene de un enlace de recuperación
   useEffect(() => {
-    if (!isLoading && user) {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setIsRecoveryMode(true);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading && user && !isRecoveryMode) {
       if (isAdmin) {
         navigate("/admin");
       } else {
         toast.info("Tu cuenta no tiene permisos de administrador");
       }
     }
-  }, [user, isAdmin, isLoading, navigate]);
+  }, [user, isAdmin, isLoading, navigate, isRecoveryMode]);
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,6 +113,98 @@ const Auth = () => {
     }
     setIsSubmitting(false);
   };
+
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    if (newPassword.length < 6) {
+      toast.error("La contraseña debe tener al menos 6 caracteres");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error("Las contraseñas no coinciden");
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success("Contraseña actualizada correctamente");
+        setIsRecoveryMode(false);
+        navigate("/admin");
+      }
+    } catch (err) {
+      toast.error("Error al actualizar la contraseña");
+    }
+    setIsSubmitting(false);
+  };
+
+  // Formulario de cambio de contraseña (modo recuperación)
+  if (isRecoveryMode) {
+    return (
+      <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+        <div className="w-full max-w-md">
+          <div className="bg-card rounded-2xl shadow-xl p-8 border border-border">
+            <div className="text-center mb-8">
+              <h1 className="font-display text-3xl font-semibold text-foreground mb-2">
+                Nueva Contraseña
+              </h1>
+              <p className="text-muted-foreground">
+                Ingresa tu nueva contraseña
+              </p>
+            </div>
+
+            <form onSubmit={handleUpdatePassword} className="space-y-4">
+              <div>
+                <Label htmlFor="newPassword">Nueva Contraseña</Label>
+                <div className="relative">
+                  <Input
+                    id="newPassword"
+                    type={showPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="••••••"
+                    required
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
+                <Input
+                  id="confirmPassword"
+                  type={showPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••"
+                  required
+                />
+              </div>
+
+              <Button type="submit" className="w-full btn-primary" disabled={isSubmitting}>
+                {isSubmitting ? "Actualizando..." : "Actualizar Contraseña"}
+              </Button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (isForgotPassword) {
     return (
