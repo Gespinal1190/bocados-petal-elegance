@@ -1,4 +1,5 @@
-import { Coffee, Utensils, Heart } from "lucide-react";
+import { Coffee, Utensils, Heart, Clock, Star, Users } from "lucide-react";
+import heroImage from "@/assets/hero-restaurant.jpg";
 
 const features = [
   {
@@ -18,6 +19,12 @@ const features = [
   },
 ];
 
+const stats = [
+  { icon: Clock, value: "13+", label: "Horas abiertos" },
+  { icon: Star, value: "4.8", label: "Valoración" },
+  { icon: Users, value: "50+", label: "Plazas" },
+];
+
 const About = () => {
   return (
     <section id="nosotros" className="section-padding bg-muted/30">
@@ -26,17 +33,32 @@ const About = () => {
           <span className="text-sm font-medium tracking-widest uppercase text-primary">
             Conócenos
           </span>
-          <h2 className="font-display text-4xl md:text-5xl font-semibold mt-3 mb-6 text-foreground">
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold mt-3 mb-6 text-foreground">
             Sobre Nosotros
           </h2>
           <div className="divider-flower">
-            <span className="text-2xl">✿</span>
+            <span className="text-2xl text-primary">✿</span>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+          {/* Image */}
+          <div className="relative">
+            <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+              <img 
+                src={heroImage} 
+                alt="Interior de Bocados Restobar" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            {/* Decorative element */}
+            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/20 rounded-full blur-3xl" />
+            <div className="absolute -top-6 -left-6 w-24 h-24 bg-gold/20 rounded-full blur-2xl" />
+          </div>
+
+          {/* Content */}
           <div className="space-y-6">
-            <p className="text-lg leading-relaxed text-foreground/80">
+            <p className="text-xl leading-relaxed text-foreground">
               Bienvenido a <strong className="text-primary">Bocados Restobar</strong>, 
               un espacio diseñado para quienes disfrutan de la buena gastronomía 
               en un ambiente moderno y elegante.
@@ -51,28 +73,38 @@ const About = () => {
               Cada plato está preparado con ingredientes de calidad y un toque 
               único que nos distingue.
             </p>
-          </div>
 
-          <div className="grid gap-6">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="card-elegant flex items-start gap-4 hover:scale-[1.02] transition-transform duration-300"
-              >
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <feature.icon className="w-6 h-6 text-primary" />
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-4 pt-6">
+              {stats.map((stat, index) => (
+                <div key={index} className="text-center p-4 bg-card rounded-2xl border border-border/50">
+                  <stat.icon className="w-6 h-6 text-primary mx-auto mb-2" />
+                  <div className="font-display text-2xl font-bold text-foreground">{stat.value}</div>
+                  <div className="text-xs text-muted-foreground">{stat.label}</div>
                 </div>
-                <div>
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-1">
-                    {feature.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm">
-                    {feature.description}
-                  </p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+        </div>
+
+        {/* Features */}
+        <div className="grid md:grid-cols-3 gap-6">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="card-elegant text-center group hover:scale-[1.03] transition-all duration-300"
+            >
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-rose-medium/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                <feature.icon className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="font-display text-xl font-semibold text-foreground mb-2">
+                {feature.title}
+              </h3>
+              <p className="text-muted-foreground text-sm">
+                {feature.description}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
