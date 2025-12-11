@@ -21,9 +21,18 @@ import dishIcecream from "@/assets/dish-icecream.jpg";
 
 const categories = [
   { id: "desayunos", label: "Desayunos" },
+  { id: "brunch", label: "Brunch" },
+  { id: "entrantes", label: "Entrantes" },
   { id: "comidas", label: "Comidas & Cenas" },
+  { id: "tapas", label: "Tapas" },
+  { id: "ensaladas", label: "Ensaladas" },
+  { id: "carnes", label: "Carnes" },
+  { id: "pescados", label: "Pescados" },
   { id: "bebidas", label: "Bebidas" },
+  { id: "cocteles", label: "Cócteles" },
+  { id: "vinos", label: "Vinos" },
   { id: "postres", label: "Postres" },
+  { id: "cafes", label: "Cafés" },
 ];
 
 type MenuItem = {

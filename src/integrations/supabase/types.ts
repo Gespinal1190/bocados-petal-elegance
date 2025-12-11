@@ -80,6 +80,48 @@ export type Database = {
         }
         Relationships: []
       }
+      reservations: {
+        Row: {
+          created_at: string
+          date: string
+          email: string
+          guests: number
+          id: string
+          name: string
+          notes: string | null
+          phone: string
+          status: string
+          time: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          email: string
+          guests?: number
+          id?: string
+          name: string
+          notes?: string | null
+          phone: string
+          status?: string
+          time: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          email?: string
+          guests?: number
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string
+          status?: string
+          time?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           id: string

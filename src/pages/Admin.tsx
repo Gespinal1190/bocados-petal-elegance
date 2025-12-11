@@ -3,10 +3,11 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogOut, Home, UtensilsCrossed, Image, Settings } from "lucide-react";
+import { LogOut, Home, UtensilsCrossed, Image, Settings, CalendarDays } from "lucide-react";
 import AdminMenu from "@/components/admin/AdminMenu";
 import AdminGallery from "@/components/admin/AdminGallery";
 import AdminSettings from "@/components/admin/AdminSettings";
+import AdminReservations from "@/components/admin/AdminReservations";
 
 const Admin = () => {
   const { user, isAdmin, isLoading, signOut } = useAuth();
@@ -60,7 +61,7 @@ const Admin = () => {
 
       <main className="container-custom px-4 py-8">
         <Tabs defaultValue="menu" className="space-y-6">
-          <TabsList className="grid w-full max-w-md grid-cols-3 mx-auto">
+          <TabsList className="grid w-full max-w-lg grid-cols-4 mx-auto">
             <TabsTrigger value="menu" className="flex items-center gap-2">
               <UtensilsCrossed className="w-4 h-4" />
               <span className="hidden sm:inline">Menú</span>
@@ -68,6 +69,10 @@ const Admin = () => {
             <TabsTrigger value="gallery" className="flex items-center gap-2">
               <Image className="w-4 h-4" />
               <span className="hidden sm:inline">Galería</span>
+            </TabsTrigger>
+            <TabsTrigger value="reservations" className="flex items-center gap-2">
+              <CalendarDays className="w-4 h-4" />
+              <span className="hidden sm:inline">Reservas</span>
             </TabsTrigger>
             <TabsTrigger value="settings" className="flex items-center gap-2">
               <Settings className="w-4 h-4" />
@@ -81,6 +86,10 @@ const Admin = () => {
 
           <TabsContent value="gallery">
             <AdminGallery />
+          </TabsContent>
+
+          <TabsContent value="reservations">
+            <AdminReservations />
           </TabsContent>
 
           <TabsContent value="settings">
