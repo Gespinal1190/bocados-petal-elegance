@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { supabase } from "@/integrations/supabase/client";
-import OptimizedImage, { getLocalFallback } from "@/components/OptimizedImage";
+import { getLocalFallback } from "@/components/OptimizedImage";
 import dishCrepe from "@/assets/dish-crepe.jpg";
 import dishWaffle from "@/assets/dish-waffle.jpg";
 import dishEntrecot from "@/assets/dish-entrecot.jpg";
@@ -156,11 +156,12 @@ const Menu = () => {
                 style={{ animationDelay: `${index * 80}ms` }}
               >
                 <div className="relative h-52 overflow-hidden">
-                  <OptimizedImage
+                  <img
                     src={getItemImage(item)}
                     alt={item.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   {item.price && (
