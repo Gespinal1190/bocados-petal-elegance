@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Local image fallbacks mapping
 import heroImage from "@/assets/hero-restaurant.jpg";
@@ -53,6 +53,7 @@ const getFilenameFromUrl = (url: string): string | null => {
 
 // Get local fallback for a URL
 const getLocalFallback = (url: string): string | null => {
+  if (!url) return null;
   const filename = getFilenameFromUrl(url);
   if (filename && localImageMap[filename]) {
     return localImageMap[filename];
@@ -66,6 +67,7 @@ interface OptimizedImageProps {
   className?: string;
   loading?: "lazy" | "eager";
   priority?: boolean;
+  fallbackSrc?: string;
 }
 
 const OptimizedImage = ({ 
@@ -73,42 +75,39 @@ const OptimizedImage = ({
   alt, 
   className = "", 
   loading = "lazy",
-  priority = false 
+  priority = false,
+  fallbackSrc
 }: OptimizedImageProps) => {
-  const [currentSrc, setCurrentSrc] = useState(src);
+  const [currentSrc, setCurrentSrc] = useState(() => {
+    // Try local fallback first if it exists
+    const localFallback = getLocalFallback(src);
+    return localFallback || src;
+  });
   const [hasError, setHasError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const localFallback = getLocalFallback(src);
+    setCurrentSrc(localFallback || src);
+    setHasError(false);
+  }, [src]);
 
   const handleError = () => {
-    if (!hasError) {
-      const fallback = getLocalFallback(src);
-      if (fallback) {
-        setCurrentSrc(fallback);
-        setHasError(true);
-      }
+    if (!hasError && fallbackSrc) {
+      setCurrentSrc(fallbackSrc);
+      setHasError(true);
     }
   };
 
-  const handleLoad = () => {
-    setIsLoading(false);
-  };
-
   return (
-    <div className={`relative ${className}`}>
-      {isLoading && (
-        <div className="absolute inset-0 bg-muted animate-pulse rounded-inherit" />
-      )}
-      <img
-        src={currentSrc}
-        alt={alt}
-        className={`${className} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
-        loading={priority ? "eager" : loading}
-        decoding="async"
-        fetchPriority={priority ? "high" : undefined}
-        onError={handleError}
-        onLoad={handleLoad}
-      />
-    </div>
+    <img
+      src={currentSrc}
+      alt={alt}
+      className={className}
+      loading={priority ? "eager" : loading}
+      decoding="async"
+      fetchPriority={priority ? "high" : undefined}
+      onError={handleError}
+    />
   );
 };
 
