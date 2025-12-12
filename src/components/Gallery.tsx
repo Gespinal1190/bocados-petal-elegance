@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { supabase } from "@/integrations/supabase/client";
+import OptimizedImage, { getLocalFallback } from "@/components/OptimizedImage";
 import heroImage from "@/assets/hero-restaurant.jpg";
 import dishCrepe from "@/assets/dish-crepe.jpg";
 import dishWaffle from "@/assets/dish-waffle.jpg";
@@ -54,7 +55,7 @@ const Gallery = () => {
 
   const displayImages = useDatabase
     ? images.map((img, i) => ({
-        src: img.image_url,
+        src: getLocalFallback(img.image_url) || img.image_url,
         alt: img.alt_text || "Imagen del restaurante",
         span: spanClasses[i % spanClasses.length],
       }))
@@ -92,12 +93,11 @@ const Gallery = () => {
               }`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <img
+              <OptimizedImage
                 src={image.src}
                 alt={image.alt}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 loading="lazy"
-                decoding="async"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                 <p className="text-primary-foreground text-sm font-medium drop-shadow-lg translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
