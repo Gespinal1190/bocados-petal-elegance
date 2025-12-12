@@ -229,11 +229,37 @@ const AdminMenu = () => {
         const categoryItems = items.filter((i) => i.category === category.id);
         if (categoryItems.length === 0) return null;
 
+        const handleDeleteCategory = async () => {
+          if (!confirm(`¿Eliminar toda la categoría "${category.label}" y sus ${categoryItems.length} platos?`)) return;
+          
+          const { error } = await supabase
+            .from("menu_items")
+            .delete()
+            .eq("category", category.id);
+          
+          if (error) {
+            toast.error("Error al eliminar categoría");
+            return;
+          }
+          toast.success(`Categoría "${category.label}" eliminada`);
+          fetchItems();
+        };
+
         return (
           <div key={category.id} className="mb-8">
-            <h3 className="font-display text-lg font-semibold text-foreground mb-4 border-b border-border pb-2">
-              {category.label}
-            </h3>
+            <div className="flex items-center justify-between border-b border-border pb-2 mb-4">
+              <h3 className="font-display text-lg font-semibold text-foreground">
+                {category.label} ({categoryItems.length})
+              </h3>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleDeleteCategory}
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <Trash2 className="w-4 h-4 mr-1" /> Eliminar categoría
+              </Button>
+            </div>
             <div className="grid gap-3">
               {categoryItems.map((item) => (
                 <div key={item.id} className="flex items-center gap-4 p-3 bg-muted/30 rounded-lg">

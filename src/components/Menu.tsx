@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { supabase } from "@/integrations/supabase/client";
-import { getLocalFallback } from "@/components/OptimizedImage";
+
 import dishCrepe from "@/assets/dish-crepe.jpg";
 import dishWaffle from "@/assets/dish-waffle.jpg";
 import dishEntrecot from "@/assets/dish-entrecot.jpg";
@@ -20,21 +20,21 @@ import drinkWine from "@/assets/drink-wine.jpg";
 import dishDessert from "@/assets/dish-dessert.jpg";
 import dishIcecream from "@/assets/dish-icecream.jpg";
 
-const categories = [
-  { id: "desayunos", label: "Desayunos" },
-  { id: "brunch", label: "Brunch" },
-  { id: "entrantes", label: "Entrantes" },
-  { id: "comidas", label: "Comidas & Cenas" },
-  { id: "tapas", label: "Tapas" },
-  { id: "ensaladas", label: "Ensaladas" },
-  { id: "carnes", label: "Carnes" },
-  { id: "pescados", label: "Pescados" },
-  { id: "bebidas", label: "Bebidas" },
-  { id: "cocteles", label: "Cócteles" },
-  { id: "vinos", label: "Vinos" },
-  { id: "postres", label: "Postres" },
-  { id: "cafes", label: "Cafés" },
-];
+const categoryLabels: Record<string, string> = {
+  desayunos: "Desayunos",
+  brunch: "Brunch",
+  entrantes: "Entrantes",
+  comidas: "Comidas & Cenas",
+  tapas: "Tapas",
+  ensaladas: "Ensaladas",
+  carnes: "Carnes",
+  pescados: "Pescados",
+  bebidas: "Bebidas",
+  cocteles: "Cócteles",
+  vinos: "Vinos",
+  postres: "Postres",
+  cafes: "Cafés",
+};
 
 type MenuItem = {
   id: string;
@@ -68,11 +68,17 @@ const fallbackImages: Record<string, string> = {
 };
 
 const Menu = () => {
-  const [activeCategory, setActiveCategory] = useState("desayunos");
+  const [activeCategory, setActiveCategory] = useState<string>("");
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: tabsRef, isVisible: tabsVisible } = useScrollAnimation();
+
+  // Obtener categorías únicas dinámicamente de los items
+  const categories = [...new Set(menuItems.map(item => item.category))].map(id => ({
+    id,
+    label: categoryLabels[id] || id
+  }));
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -84,6 +90,11 @@ const Menu = () => {
 
       if (!error && data) {
         setMenuItems(data);
+        // Establecer primera categoría activa
+        const cats = [...new Set(data.map(item => item.category))];
+        if (cats.length > 0 && !activeCategory) {
+          setActiveCategory(cats[0]);
+        }
       }
       setLoading(false);
     };
@@ -92,13 +103,11 @@ const Menu = () => {
   }, []);
 
   const getItemImage = (item: MenuItem): string => {
-    // Si hay URL de imagen, intentar usar fallback local o la URL directa
+    // Si hay URL de imagen, usarla directamente
     if (item.image_url) {
-      const localFallback = getLocalFallback(item.image_url);
-      if (localFallback) return localFallback;
       return item.image_url;
     }
-    // Usar imagen por nombre del item o imagen por defecto
+    // Usar imagen local por nombre del item o imagen por defecto
     return fallbackImages[item.name] || dishCrepe;
   };
 
