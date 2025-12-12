@@ -91,10 +91,14 @@ const Menu = () => {
     fetchMenuItems();
   }, []);
 
-  const getItemImage = (item: MenuItem) => {
+  const getItemImage = (item: MenuItem): string => {
+    // Si hay URL de imagen, intentar usar fallback local o la URL directa
     if (item.image_url) {
-      return getLocalFallback(item.image_url) || item.image_url;
+      const localFallback = getLocalFallback(item.image_url);
+      if (localFallback) return localFallback;
+      return item.image_url;
     }
+    // Usar imagen por nombre del item o imagen por defecto
     return fallbackImages[item.name] || dishCrepe;
   };
 
