@@ -53,7 +53,7 @@ const Contact = () => {
       content: (
         <a
           href={`mailto:${settings.email}`}
-          className="text-muted-foreground hover:text-primary transition-colors"
+          className="text-muted-foreground hover:text-primary transition-colors text-sm break-all"
         >
           {settings.email}
         </a>
