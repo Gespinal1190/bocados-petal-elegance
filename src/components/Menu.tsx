@@ -100,13 +100,13 @@ const Menu = () => {
     fetchData();
   }, []);
 
-  const getItemImage = (item: MenuItem): string => {
+  const getItemImage = (item: MenuItem): string | null => {
     // Si hay URL de imagen, usarla directamente
     if (item.image_url) {
       return item.image_url;
     }
-    // Usar imagen local por nombre del item o imagen por defecto
-    return fallbackImages[item.name] || dishCrepe;
+    // Usar imagen local por nombre del item o null si no hay
+    return fallbackImages[item.name] || null;
   };
 
   const filteredItems = menuItems.filter((item) => item.category === activeCategory);
@@ -167,13 +167,24 @@ const Menu = () => {
                 style={{ animationDelay: `${index * 80}ms` }}
               >
                 <div className="relative h-52 overflow-hidden">
-                  <img
-                    src={getItemImage(item)}
-                    alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  {getItemImage(item) ? (
+                    <img
+                      src={getItemImage(item)!}
+                      alt={item.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-muted flex items-center justify-center">
+                      <div className="text-center text-muted-foreground">
+                        <svg className="w-12 h-12 mx-auto mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span className="text-xs">Sin imagen</span>
+                      </div>
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   {item.price && (
                     <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
