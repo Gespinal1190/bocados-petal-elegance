@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
+import logoBocados from "@/assets/logo-bocados.png";
 
 const navLinks = [
   { href: "#inicio", label: "Inicio" },
@@ -33,13 +34,14 @@ const Navbar = () => {
     >
       <div className="container-custom">
         <div className="flex items-center justify-between h-16 px-4">
-          <a 
-            href="#inicio" 
-            className={`font-display text-2xl font-semibold transition-colors ${
-              scrolled ? "text-foreground" : "text-primary-foreground"
-            }`}
-          >
-            Bocados
+          <a href="#inicio" className="flex items-center">
+            <img 
+              src={logoBocados} 
+              alt="Bocados Restobar" 
+              className={`h-12 w-auto transition-all duration-300 ${
+                scrolled ? "" : "brightness-0 invert"
+              }`}
+            />
           </a>
 
           {/* Desktop Navigation */}
