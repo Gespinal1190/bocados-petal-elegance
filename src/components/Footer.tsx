@@ -1,5 +1,6 @@
 import { MapPin, Phone, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
+import logoBocados from "@/assets/logo-bocados.png";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -9,9 +10,11 @@ const Footer = () => {
       <div className="container-custom px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="text-center md:text-left">
-            <h3 className="font-display text-2xl font-semibold mb-2">
-              Bocados Restobar
-            </h3>
+            <img 
+              src={logoBocados} 
+              alt="Bocados Restobar" 
+              className="h-12 w-auto brightness-0 invert mb-2"
+            />
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm text-primary-foreground/70">
               <span className="flex items-center gap-1">
                 <MapPin className="w-4 h-4" />
