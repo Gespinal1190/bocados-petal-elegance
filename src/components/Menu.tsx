@@ -20,20 +20,11 @@ import drinkWine from "@/assets/drink-wine.jpg";
 import dishDessert from "@/assets/dish-dessert.jpg";
 import dishIcecream from "@/assets/dish-icecream.jpg";
 
-const categoryLabels: Record<string, string> = {
-  desayunos: "Desayunos",
-  brunch: "Brunch",
-  entrantes: "Entrantes",
-  comidas: "Comidas & Cenas",
-  tapas: "Tapas",
-  ensaladas: "Ensaladas",
-  carnes: "Carnes",
-  pescados: "Pescados",
-  bebidas: "Bebidas",
-  cocteles: "Cócteles",
-  vinos: "Vinos",
-  postres: "Postres",
-  cafes: "Cafés",
+type Category = {
+  id: string;
+  slug: string;
+  label: string;
+  sort_order: number;
 };
 
 type MenuItem = {
@@ -70,36 +61,43 @@ const fallbackImages: Record<string, string> = {
 const Menu = () => {
   const [activeCategory, setActiveCategory] = useState<string>("");
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: tabsRef, isVisible: tabsVisible } = useScrollAnimation();
 
-  // Obtener categorías únicas dinámicamente de los items
-  const categories = [...new Set(menuItems.map(item => item.category))].map(id => ({
-    id,
-    label: categoryLabels[id] || id
-  }));
-
   useEffect(() => {
-    const fetchMenuItems = async () => {
-      const { data, error } = await supabase
+    const fetchData = async () => {
+      // Fetch categories
+      const { data: catsData } = await supabase
+        .from("menu_categories")
+        .select("*")
+        .eq("is_active", true)
+        .order("sort_order");
+
+      // Fetch menu items
+      const { data: itemsData } = await supabase
         .from("menu_items")
         .select("*")
         .eq("is_active", true)
         .order("sort_order");
 
-      if (!error && data) {
-        setMenuItems(data);
-        // Establecer primera categoría activa
-        const cats = [...new Set(data.map(item => item.category))];
-        if (cats.length > 0 && !activeCategory) {
-          setActiveCategory(cats[0]);
+      if (catsData && itemsData) {
+        // Only show categories that have items
+        const categoriesWithItems = catsData.filter(cat => 
+          itemsData.some(item => item.category === cat.slug)
+        );
+        setCategories(categoriesWithItems);
+        setMenuItems(itemsData);
+        
+        if (categoriesWithItems.length > 0 && !activeCategory) {
+          setActiveCategory(categoriesWithItems[0].slug);
         }
       }
       setLoading(false);
     };
 
-    fetchMenuItems();
+    fetchData();
   }, []);
 
   const getItemImage = (item: MenuItem): string => {
@@ -143,9 +141,9 @@ const Menu = () => {
           {categories.map((category) => (
             <button
               key={category.id}
-              onClick={() => setActiveCategory(category.id)}
+              onClick={() => setActiveCategory(category.slug)}
               className={`px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${
-                activeCategory === category.id
+                activeCategory === category.slug
                   ? "bg-primary text-primary-foreground shadow-lg scale-105"
                   : "bg-card text-muted-foreground hover:bg-rose-light hover:text-foreground border border-border hover:-translate-y-0.5"
               }`}
