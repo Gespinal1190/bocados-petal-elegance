@@ -317,15 +317,34 @@ const AdminMenu = () => {
               <div>
                 <Label>Imagen</Label>
                 <div className="flex gap-2">
-                  <Input value={formData.image_url} onChange={(e) => setFormData({ ...formData, image_url: e.target.value })} placeholder="URL o subir" />
-                  <label className="btn-outline cursor-pointer flex items-center px-3">
+                  <Input 
+                    value={formData.image_url} 
+                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })} 
+                    placeholder="URL o subir" 
+                  />
+                  <label className="border border-input bg-background hover:bg-accent hover:text-accent-foreground cursor-pointer flex items-center px-3 rounded-md">
                     <Upload className="w-4 h-4" />
-                    <input type="file" accept="image/*" onChange={handleUpload} className="hidden" />
+                    <input type="file" accept="image/*" onChange={handleUpload} className="hidden" disabled={uploading} />
                   </label>
                 </div>
                 {uploading && <p className="text-sm text-muted-foreground">Subiendo...</p>}
-                {formData.image_url && (
-                  <img src={formData.image_url} alt="Preview" className="mt-2 h-20 w-20 object-cover rounded" />
+                {formData.image_url ? (
+                  <div className="mt-2 relative inline-block">
+                    <img src={formData.image_url} alt="Preview" className="h-20 w-20 object-cover rounded" />
+                    <Button 
+                      type="button"
+                      variant="destructive" 
+                      size="icon" 
+                      className="absolute -top-2 -right-2 h-6 w-6"
+                      onClick={() => setFormData({ ...formData, image_url: "" })}
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="mt-2 h-20 w-20 bg-muted rounded flex items-center justify-center">
+                    <span className="text-muted-foreground text-xs">Sin imagen</span>
+                  </div>
                 )}
               </div>
               <Button type="submit" className="w-full btn-primary">
@@ -339,20 +358,24 @@ const AdminMenu = () => {
 
       {categories.map((category) => {
         const categoryItems = items.filter((i) => i.category === category.slug);
-        if (categoryItems.length === 0) return null;
 
         const handleDeleteCategory = async () => {
-          if (!confirm(`¿Eliminar toda la categoría "${category.label}" y sus ${categoryItems.length} platos?`)) return;
+          const confirmMsg = categoryItems.length > 0 
+            ? `¿Eliminar toda la categoría "${category.label}" y sus ${categoryItems.length} platos?`
+            : `¿Eliminar la categoría "${category.label}"?`;
+          if (!confirm(confirmMsg)) return;
           
-          // Delete all items in category
-          const { error: itemsError } = await supabase
-            .from("menu_items")
-            .delete()
-            .eq("category", category.slug);
-          
-          if (itemsError) {
-            toast.error("Error al eliminar platos de la categoría");
-            return;
+          // Delete all items in category if any
+          if (categoryItems.length > 0) {
+            const { error: itemsError } = await supabase
+              .from("menu_items")
+              .delete()
+              .eq("category", category.slug);
+            
+            if (itemsError) {
+              toast.error("Error al eliminar platos de la categoría");
+              return;
+            }
           }
 
           // Delete the category itself
@@ -396,30 +419,40 @@ const AdminMenu = () => {
                 </Button>
               </div>
             </div>
-            <div className="grid gap-3">
-              {categoryItems.map((item) => (
-                <div key={item.id} className="flex items-center gap-4 p-3 bg-muted/30 rounded-lg">
-                  {item.image_url && (
-                    <img src={item.image_url} alt={item.name} className="w-16 h-16 object-cover rounded" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-foreground">{item.name}</p>
-                    <p className="text-sm text-muted-foreground truncate">{item.description}</p>
+            {categoryItems.length === 0 ? (
+              <div className="flex items-center justify-center p-8 bg-muted/20 rounded-lg border-2 border-dashed border-border">
+                <p className="text-muted-foreground text-sm">No hay platos en esta categoría. Añade uno con el botón "Añadir Plato".</p>
+              </div>
+            ) : (
+              <div className="grid gap-3">
+                {categoryItems.map((item) => (
+                  <div key={item.id} className="flex items-center gap-4 p-3 bg-muted/30 rounded-lg">
+                    {item.image_url ? (
+                      <img src={item.image_url} alt={item.name} className="w-16 h-16 object-cover rounded" />
+                    ) : (
+                      <div className="w-16 h-16 bg-muted rounded flex items-center justify-center">
+                        <span className="text-muted-foreground text-xs text-center">Sin imagen</span>
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-foreground">{item.name}</p>
+                      <p className="text-sm text-muted-foreground truncate">{item.description}</p>
+                    </div>
+                    <div className="text-right">
+                      {item.price && <p className="font-semibold text-primary">{item.price.toFixed(2)}€</p>}
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}>
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => handleDelete(item.id)}>
+                        <Trash2 className="w-4 h-4 text-destructive" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    {item.price && <p className="font-semibold text-primary">{item.price.toFixed(2)}€</p>}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}>
-                      <Pencil className="w-4 h-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDelete(item.id)}>
-                      <Trash2 className="w-4 h-4 text-destructive" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         );
       })}
