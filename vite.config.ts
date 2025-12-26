@@ -5,6 +5,8 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  // Para GitHub Pages: usa la variable de entorno o "/" para desarrollo local
+  base: process.env.GITHUB_PAGES ? "/bocados-restobar/" : "/",
   server: {
     host: "::",
     port: 8080,
