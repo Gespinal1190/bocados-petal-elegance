@@ -25,6 +25,18 @@
 
   <body>
     <div id="root"></div>
+    <script>
+      // Manejo de redirección SPA desde 404.html de GitHub Pages
+      (function() {
+        const redirect = sessionStorage.getItem('redirect');
+        if (redirect) {
+          sessionStorage.removeItem('redirect');
+          if (redirect !== '/' && redirect !== '') {
+            window.history.replaceState(null, null, redirect);
+          }
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
