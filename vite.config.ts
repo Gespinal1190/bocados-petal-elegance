@@ -5,8 +5,6 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // Para GitHub Pages
-  base: "/bocados-petal-elegance/",
   server: {
     host: "::",
     port: 8080,

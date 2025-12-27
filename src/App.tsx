@@ -11,15 +11,12 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-// Detectar si estamos en GitHub Pages
-const basename = import.meta.env.PROD ? "/bocados-petal-elegance" : "";
-
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter basename={basename}>
+      <BrowserRouter>
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
