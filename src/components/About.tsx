@@ -29,9 +29,9 @@ const About = () => {
               se fusiona con un espacio acogedor y moderno.
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              Ofrecemos desayunos, comidas, cenas, cafés especiales, crepes,
-              gofres, entrecot y mucho más. Cada plato está preparado con
-              ingredientes de calidad y un toque único que nos distingue.
+              Ofrecemos desayunos, comidas, meriendas y cenas. Cada plato está
+              preparado con ingredientes de calidad y un toque único que nos
+              distingue.
             </p>
             <a
               href="#menu"
