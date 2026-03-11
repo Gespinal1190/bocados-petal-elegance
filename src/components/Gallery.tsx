@@ -18,7 +18,7 @@ type GalleryImage = {
 };
 
 const defaultImages = [
-  { src: heroImage, alt: "Interior del restaurante con pared de flores rosadas", span: "col-span-2 row-span-2" },
+  { src: heroImage, alt: "Interior del restaurante", span: "col-span-2 row-span-2" },
   { src: dishCrepe, alt: "Crepes con frutas frescas", span: "" },
   { src: coffeeSpecialty, alt: "Café latte art", span: "" },
   { src: dishEntrecot, alt: "Entrecot a la brasa", span: "col-span-2" },
@@ -61,37 +61,39 @@ const Gallery = () => {
       }))
     : defaultImages;
 
+  if (useDatabase && images.length === 0) return null;
+
   return (
-    <section id="galeria" className="section-padding bg-muted/30 overflow-hidden">
+    <section id="galeria" className="section-padding overflow-hidden">
       <div className="container-custom px-4">
-        <div 
+        <div
           ref={headerRef}
-          className={`text-center mb-12 transition-all duration-700 ${
-            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          className={`text-center mb-14 transition-all duration-700 ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <span className="text-sm font-medium tracking-widest uppercase text-primary">
+          <p className="text-xs font-medium tracking-[0.3em] uppercase text-primary mb-4">
             Nuestro Espacio
-          </span>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold mt-3 mb-6 text-foreground">
+          </p>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground">
             Galería
           </h2>
-          <div className="divider-flower">
-            <span className="text-2xl text-primary">✿</span>
+          <div className="divider-line mt-6">
+            <span className="text-primary text-lg">◆</span>
           </div>
         </div>
 
-        <div 
+        <div
           ref={gridRef}
-          className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-6xl mx-auto auto-rows-[200px] md:auto-rows-[220px]"
+          className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 max-w-6xl mx-auto auto-rows-[200px] md:auto-rows-[240px]"
         >
           {displayImages.map((image, index) => (
             <div
               key={index}
-              className={`relative overflow-hidden rounded-2xl group cursor-pointer ${image.span} transition-all duration-700 ${
-                gridVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
+              className={`relative overflow-hidden group cursor-pointer ${image.span} transition-all duration-700 ${
+                gridVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
               }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
+              style={{ transitionDelay: `${index * 80}ms` }}
             >
               <img
                 src={image.src}
@@ -100,11 +102,7 @@ const Gallery = () => {
                 loading="lazy"
                 decoding="async"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                <p className="text-primary-foreground text-sm font-medium drop-shadow-lg translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  {image.alt}
-                </p>
-              </div>
+              <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/30 transition-all duration-300" />
             </div>
           ))}
         </div>

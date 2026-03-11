@@ -5,7 +5,6 @@ import Menu from "@/components/Menu";
 import Gallery from "@/components/Gallery";
 import Reservations from "@/components/Reservations";
 import Location from "@/components/Location";
-import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -18,7 +17,6 @@ const Index = () => {
       <Gallery />
       <Reservations />
       <Location />
-      <Contact />
       <Footer />
     </main>
   );
