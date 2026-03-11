@@ -20,13 +20,6 @@ import drinkWine from "@/assets/drink-wine.jpg";
 import dishDessert from "@/assets/dish-dessert.jpg";
 import dishIcecream from "@/assets/dish-icecream.jpg";
 
-type Category = {
-  id: string;
-  slug: string;
-  label: string;
-  sort_order: number;
-};
-
 type MenuItem = {
   id: string;
   name: string;
@@ -58,36 +51,20 @@ const fallbackImages: Record<string, string> = {
 };
 
 const Menu = () => {
-  const [activeCategory, setActiveCategory] = useState<string>("");
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: catsData } = await supabase
-        .from("menu_categories")
-        .select("*")
-        .eq("is_active", true)
-        .order("sort_order");
-
       const { data: itemsData } = await supabase
         .from("menu_items")
         .select("*")
         .eq("is_active", true)
         .order("sort_order");
 
-      if (catsData && itemsData) {
-        const categoriesWithItems = catsData.filter(cat =>
-          itemsData.some(item => item.category === cat.slug)
-        );
-        setCategories(categoriesWithItems);
+      if (itemsData) {
         setMenuItems(itemsData);
-
-        if (categoriesWithItems.length > 0 && !activeCategory) {
-          setActiveCategory(categoriesWithItems[0].slug);
-        }
       }
       setLoading(false);
     };
@@ -99,8 +76,6 @@ const Menu = () => {
     if (item.image_url) return item.image_url;
     return fallbackImages[item.name] || null;
   };
-
-  const filteredItems = menuItems.filter((item) => item.category === activeCategory);
 
   return (
     <section id="menu" className="section-padding bg-secondary/30 overflow-hidden">
@@ -122,31 +97,13 @@ const Menu = () => {
           </div>
         </div>
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-14">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setActiveCategory(category.slug)}
-              className={`px-5 py-2.5 text-xs font-medium tracking-[0.15em] uppercase transition-all duration-300 border ${
-                activeCategory === category.slug
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-transparent text-muted-foreground border-border hover:border-primary hover:text-foreground"
-              }`}
-            >
-              {category.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Menu Items Grid */}
         {loading ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground">Cargando menú...</p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {filteredItems.map((item, index) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {menuItems.map((item, index) => (
               <div
                 key={item.id}
                 className="bg-card overflow-hidden group hover:shadow-lg transition-all duration-500 border border-border/50 animate-scale-in"
