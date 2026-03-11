@@ -7,7 +7,7 @@ const Location = () => {
     phone: "+34 931 42 74 06",
     address: "Carrer dels Caputxins, 4, 08800 Vilanova i la Geltrú, Barcelona",
     schedule_weekdays: "09:30 – 23:00",
-    schedule_sunday: "10:00 – 23:00",
+    schedule_sunday: "Cerrado",
   });
 
   const { ref: sectionRef, isVisible } = useScrollAnimation({ threshold: 0.2 });
@@ -32,8 +32,8 @@ const Location = () => {
   }, []);
 
   const scheduleData = [
-    { days: "Lunes a Sábado", hours: settings.schedule_weekdays },
-    { days: "Domingo", hours: settings.schedule_sunday },
+    { days: "Martes a Sábado", hours: settings.schedule_weekdays },
+    { days: "Domingo y Lunes", hours: "Cerrado" },
   ];
 
   return (
