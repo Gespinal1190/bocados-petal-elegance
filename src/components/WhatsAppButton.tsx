@@ -1,7 +1,9 @@
 const WhatsAppButton = () => {
+  const message = encodeURIComponent("Hola Bocados, quisiera hacer una reserva");
+  
   return (
     <a
-      href="https://wa.me/34607406094"
+      href={`https://wa.me/34607406094?text=${message}`}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contactar por WhatsApp"
