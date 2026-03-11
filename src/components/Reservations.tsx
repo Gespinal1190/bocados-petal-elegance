@@ -75,6 +75,23 @@ const Reservations = () => {
 
   const today = new Date().toISOString().split("T")[0];
 
+  const isClosedDay = (dateStr: string) => {
+    if (!dateStr) return false;
+    const date = new Date(dateStr + "T00:00:00");
+    const day = date.getDay(); // 0 = Sunday, 1 = Monday
+    return day === 0 || day === 1;
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (isClosedDay(val)) {
+      toast.error("Domingos y lunes estamos cerrados. Elige otro día.");
+      setFormData({ ...formData, date: "" });
+    } else {
+      setFormData({ ...formData, date: val });
+    }
+  };
+
   return (
     <section id="reservas" className="section-padding bg-primary/5 overflow-hidden">
       <div className="container-custom px-4">
@@ -160,7 +177,7 @@ const Reservations = () => {
                     id="date"
                     type="date"
                     value={formData.date}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    onChange={handleDateChange}
                     min={today}
                     required
                     className="border-border"
