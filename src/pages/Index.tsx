@@ -19,6 +19,7 @@ const Index = () => {
       <Reservations />
       <Location />
       <Footer />
+      <WhatsAppButton />
     </main>
   );
 };
