@@ -32,8 +32,8 @@ const Location = () => {
   }, []);
 
   const scheduleData = [
-    { days: "Lunes a Sábado", hours: settings.schedule_weekdays },
-    { days: "Domingo", hours: settings.schedule_sunday },
+    { days: "Martes a Sábado", hours: settings.schedule_weekdays },
+    { days: "Domingo y Lunes", hours: "Cerrado" },
   ];
 
   return (
