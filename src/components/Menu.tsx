@@ -36,7 +36,6 @@ type MenuItem = {
   category: string;
 };
 
-// Fallback images for items without custom images
 const fallbackImages: Record<string, string> = {
   "Tostadas Variadas": dishToast,
   "Bollería del Día": dishPastry,
@@ -64,18 +63,15 @@ const Menu = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
-  const { ref: tabsRef, isVisible: tabsVisible } = useScrollAnimation();
 
   useEffect(() => {
     const fetchData = async () => {
-      // Fetch categories
       const { data: catsData } = await supabase
         .from("menu_categories")
         .select("*")
         .eq("is_active", true)
         .order("sort_order");
 
-      // Fetch menu items
       const { data: itemsData } = await supabase
         .from("menu_items")
         .select("*")
@@ -83,13 +79,12 @@ const Menu = () => {
         .order("sort_order");
 
       if (catsData && itemsData) {
-        // Only show categories that have items
-        const categoriesWithItems = catsData.filter(cat => 
+        const categoriesWithItems = catsData.filter(cat =>
           itemsData.some(item => item.category === cat.slug)
         );
         setCategories(categoriesWithItems);
         setMenuItems(itemsData);
-        
+
         if (categoriesWithItems.length > 0 && !activeCategory) {
           setActiveCategory(categoriesWithItems[0].slug);
         }
@@ -101,51 +96,42 @@ const Menu = () => {
   }, []);
 
   const getItemImage = (item: MenuItem): string | null => {
-    // Si hay URL de imagen, usarla directamente
-    if (item.image_url) {
-      return item.image_url;
-    }
-    // Usar imagen local por nombre del item o null si no hay
+    if (item.image_url) return item.image_url;
     return fallbackImages[item.name] || null;
   };
 
   const filteredItems = menuItems.filter((item) => item.category === activeCategory);
 
   return (
-    <section id="menu" className="section-padding bg-cream overflow-hidden">
+    <section id="menu" className="section-padding bg-secondary/30 overflow-hidden">
       <div className="container-custom px-4">
-        <div 
+        <div
           ref={headerRef}
-          className={`text-center mb-12 transition-all duration-700 ${
-            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          className={`text-center mb-14 transition-all duration-700 ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <span className="text-sm font-medium tracking-widest uppercase text-primary">
+          <p className="text-xs font-medium tracking-[0.3em] uppercase text-primary mb-4">
             Nuestra Carta
-          </span>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold mt-3 mb-6 text-foreground">
+          </p>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground">
             Menú
           </h2>
-          <div className="divider-flower">
-            <span className="text-2xl text-primary">✿</span>
+          <div className="divider-line mt-6">
+            <span className="text-primary text-lg">◆</span>
           </div>
         </div>
 
         {/* Category Tabs */}
-        <div 
-          ref={tabsRef}
-          className={`flex flex-wrap justify-center gap-3 md:gap-4 mb-12 transition-all duration-700 delay-200 ${
-            tabsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
-        >
+        <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-14">
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setActiveCategory(category.slug)}
-              className={`px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${
+              className={`px-5 py-2.5 text-xs font-medium tracking-[0.15em] uppercase transition-all duration-300 border ${
                 activeCategory === category.slug
-                  ? "bg-primary text-primary-foreground shadow-lg scale-105"
-                  : "bg-card text-muted-foreground hover:bg-rose-light hover:text-foreground border border-border hover:-translate-y-0.5"
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-transparent text-muted-foreground border-border hover:border-primary hover:text-foreground"
               }`}
             >
               {category.label}
@@ -159,43 +145,35 @@ const Menu = () => {
             <p className="text-muted-foreground">Cargando menú...</p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {filteredItems.map((item, index) => (
               <div
                 key={item.id}
-                className="bg-card rounded-2xl overflow-hidden group hover:shadow-xl transition-all duration-500 border border-border/50 animate-scale-in hover:-translate-y-2"
-                style={{ animationDelay: `${index * 80}ms` }}
+                className="bg-card overflow-hidden group hover:shadow-lg transition-all duration-500 border border-border/50 animate-scale-in"
+                style={{ animationDelay: `${index * 60}ms` }}
               >
-                <div className="relative h-52 overflow-hidden">
-                  {getItemImage(item) ? (
+                {getItemImage(item) && (
+                  <div className="relative h-56 overflow-hidden">
                     <img
                       src={getItemImage(item)!}
                       alt={item.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       loading="lazy"
                       decoding="async"
                     />
-                  ) : (
-                    <div className="w-full h-full bg-muted flex items-center justify-center">
-                      <div className="text-center text-muted-foreground">
-                        <svg className="w-12 h-12 mx-auto mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <span className="text-xs">Sin imagen</span>
-                      </div>
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  {item.price && (
-                    <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
-                      {item.price.toFixed(2)}€
-                    </div>
-                  )}
-                </div>
-                <div className="p-5">
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-                    {item.name}
-                  </h3>
+                  </div>
+                )}
+                <div className="p-6">
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <h3 className="font-display text-xl font-semibold text-foreground">
+                      {item.name}
+                    </h3>
+                    {item.price && (
+                      <span className="text-primary font-semibold whitespace-nowrap">
+                        {item.price.toFixed(2)}€
+                      </span>
+                    )}
+                  </div>
                   <p className="text-muted-foreground text-sm leading-relaxed">
                     {item.description}
                   </p>
@@ -205,12 +183,10 @@ const Menu = () => {
           </div>
         )}
 
-        <div className="text-center mt-12">
-          <div className="inline-block bg-muted/50 px-6 py-3 rounded-full">
-            <p className="text-muted-foreground text-sm">
-              🍽️ Pregunta por nuestras sugerencias del día y opciones para alérgenos
-            </p>
-          </div>
+        <div className="text-center mt-14">
+          <p className="text-muted-foreground text-sm">
+            Pregunta por nuestras sugerencias del día y opciones para alérgenos
+          </p>
         </div>
       </div>
     </section>

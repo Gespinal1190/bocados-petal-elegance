@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Calendar, Clock, Users, Phone, Mail, User } from "lucide-react";
 import { z } from "zod";
 
 const reservationSchema = z.object({
@@ -29,13 +28,7 @@ const Reservations = () => {
   const { ref: formRef, isVisible: formVisible } = useScrollAnimation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    date: "",
-    time: "",
-    guests: "2",
-    notes: "",
+    name: "", email: "", phone: "", date: "", time: "", guests: "2", notes: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,49 +59,39 @@ const Reservations = () => {
 
       if (error) {
         toast.error("Error al enviar la reserva. Inténtalo de nuevo.");
-        console.error("Reservation error:", error);
       } else {
         toast.success("¡Reserva enviada! Te confirmaremos pronto.");
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          date: "",
-          time: "",
-          guests: "2",
-          notes: "",
-        });
+        setFormData({ name: "", email: "", phone: "", date: "", time: "", guests: "2", notes: "" });
       }
-    } catch (err) {
+    } catch {
       toast.error("Error de conexión");
     }
 
     setIsSubmitting(false);
   };
 
-  // Get minimum date (today)
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <section id="reservas" className="section-padding bg-rose-light/30 overflow-hidden">
+    <section id="reservas" className="section-padding bg-primary/5 overflow-hidden">
       <div className="container-custom px-4">
         <div
           ref={headerRef}
-          className={`text-center mb-12 transition-all duration-700 ${
+          className={`text-center mb-14 transition-all duration-700 ${
             headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <span className="text-sm font-medium tracking-widest uppercase text-primary">
+          <p className="text-xs font-medium tracking-[0.3em] uppercase text-primary mb-4">
             Reserva tu Mesa
-          </span>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold mt-3 mb-6 text-foreground">
-            Reservaciones
+          </p>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground">
+            Reservas
           </h2>
-          <div className="divider-flower">
-            <span className="text-2xl text-primary">✿</span>
+          <div className="divider-line mt-6">
+            <span className="text-primary text-lg">◆</span>
           </div>
-          <p className="text-muted-foreground mt-6 max-w-xl mx-auto">
-            Reserva tu mesa y disfruta de una experiencia gastronómica única en Bocados Restobar
+          <p className="text-muted-foreground mt-6 max-w-lg mx-auto">
+            Reserva tu mesa y disfruta de una experiencia gastronómica única
           </p>
         </div>
 
@@ -118,12 +101,11 @@ const Reservations = () => {
             formVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <div className="bg-card rounded-2xl shadow-xl p-8 border border-border">
+          <div className="bg-card p-8 md:p-10 border border-border">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="name" className="flex items-center gap-2 mb-2">
-                    <User className="w-4 h-4 text-primary" />
+                  <Label htmlFor="name" className="text-xs tracking-wider uppercase text-muted-foreground mb-2 block">
                     Nombre
                   </Label>
                   <Input
@@ -132,11 +114,11 @@ const Reservations = () => {
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Tu nombre"
                     required
+                    className="border-border"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="phone" className="flex items-center gap-2 mb-2">
-                    <Phone className="w-4 h-4 text-primary" />
+                  <Label htmlFor="phone" className="text-xs tracking-wider uppercase text-muted-foreground mb-2 block">
                     Teléfono
                   </Label>
                   <Input
@@ -146,13 +128,13 @@ const Reservations = () => {
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="Tu teléfono"
                     required
+                    className="border-border"
                   />
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="email" className="flex items-center gap-2 mb-2">
-                  <Mail className="w-4 h-4 text-primary" />
+                <Label htmlFor="email" className="text-xs tracking-wider uppercase text-muted-foreground mb-2 block">
                   Email
                 </Label>
                 <Input
@@ -162,13 +144,13 @@ const Reservations = () => {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="tu@email.com"
                   required
+                  className="border-border"
                 />
               </div>
 
               <div className="grid md:grid-cols-3 gap-6">
                 <div>
-                  <Label htmlFor="date" className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-4 h-4 text-primary" />
+                  <Label htmlFor="date" className="text-xs tracking-wider uppercase text-muted-foreground mb-2 block">
                     Fecha
                   </Label>
                   <Input
@@ -178,39 +160,30 @@ const Reservations = () => {
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                     min={today}
                     required
+                    className="border-border"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="time" className="flex items-center gap-2 mb-2">
-                    <Clock className="w-4 h-4 text-primary" />
+                  <Label htmlFor="time" className="text-xs tracking-wider uppercase text-muted-foreground mb-2 block">
                     Hora
                   </Label>
-                  <Select
-                    value={formData.time}
-                    onValueChange={(v) => setFormData({ ...formData, time: v })}
-                  >
-                    <SelectTrigger>
+                  <Select value={formData.time} onValueChange={(v) => setFormData({ ...formData, time: v })}>
+                    <SelectTrigger className="border-border">
                       <SelectValue placeholder="Selecciona" />
                     </SelectTrigger>
                     <SelectContent>
                       {timeSlots.map((time) => (
-                        <SelectItem key={time} value={time}>
-                          {time}
-                        </SelectItem>
+                        <SelectItem key={time} value={time}>{time}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="guests" className="flex items-center gap-2 mb-2">
-                    <Users className="w-4 h-4 text-primary" />
+                  <Label htmlFor="guests" className="text-xs tracking-wider uppercase text-muted-foreground mb-2 block">
                     Personas
                   </Label>
-                  <Select
-                    value={formData.guests}
-                    onValueChange={(v) => setFormData({ ...formData, guests: v })}
-                  >
-                    <SelectTrigger>
+                  <Select value={formData.guests} onValueChange={(v) => setFormData({ ...formData, guests: v })}>
+                    <SelectTrigger className="border-border">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -225,20 +198,21 @@ const Reservations = () => {
               </div>
 
               <div>
-                <Label htmlFor="notes" className="mb-2 block">
-                  Notas adicionales (opcional)
+                <Label htmlFor="notes" className="text-xs tracking-wider uppercase text-muted-foreground mb-2 block">
+                  Notas (opcional)
                 </Label>
                 <Textarea
                   id="notes"
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  placeholder="Alergias, celebraciones especiales, preferencias..."
+                  placeholder="Alergias, celebraciones especiales..."
                   rows={3}
+                  className="border-border"
                 />
               </div>
 
-              <Button type="submit" className="w-full btn-primary" disabled={isSubmitting}>
-                {isSubmitting ? "Enviando..." : "Reservar Mesa"}
+              <Button type="submit" className="w-full btn-primary py-4" disabled={isSubmitting}>
+                {isSubmitting ? "Enviando..." : "RESERVAR MESA"}
               </Button>
             </form>
           </div>
