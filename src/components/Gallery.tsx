@@ -44,7 +44,7 @@ const Gallery = () => {
         .eq("is_active", true)
         .order("sort_order");
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         setImages(data);
         setUseDatabase(true);
       }
