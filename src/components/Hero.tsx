@@ -1,8 +1,7 @@
 import { useParallax } from "@/hooks/use-scroll-animation";
-import heroImage from "@/assets/hero-restaurant.jpg";
 
 const Hero = () => {
-  const { ref: parallaxRef, offset } = useParallax(0.3);
+  const { ref: parallaxRef } = useParallax(0.3);
 
   return (
     <section
@@ -10,19 +9,17 @@ const Hero = () => {
       ref={parallaxRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Background Image with Parallax */}
-      <div
-        className="absolute inset-0"
-        style={{ transform: `translateY(${offset * 0.3}px)` }}
-      >
-        <img
-          src={heroImage}
-          alt="Interior del restaurante Bocados Restobar"
-          className="w-full h-full object-cover scale-110"
-          loading="eager"
-          decoding="async"
-          fetchPriority="high"
-        />
+      {/* Background Video */}
+      <div className="absolute inset-0">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src="/videos/hero-video.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-foreground/50" />
       </div>
 
