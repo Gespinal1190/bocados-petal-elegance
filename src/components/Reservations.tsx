@@ -177,7 +177,7 @@ const Reservations = () => {
                     id="date"
                     type="date"
                     value={formData.date}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    onChange={handleDateChange}
                     min={today}
                     required
                     className="border-border"
