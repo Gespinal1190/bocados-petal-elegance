@@ -65,6 +65,19 @@ const Reservations = () => {
       } else {
         toast.success("¡Reserva enviada! Te confirmaremos pronto.");
         setFormData({ name: "", email: "", phone: "", date: "", time: "", guests: "2", notes: "" });
+
+        // Notify via Telegram (fire and forget)
+        supabase.functions.invoke("notify-reservation", {
+          body: {
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim(),
+            date: formData.date,
+            time: formData.time,
+            guests: parseInt(formData.guests),
+            notes: formData.notes.trim() || null,
+          },
+        }).catch(console.error);
       }
     } catch {
       toast.error("Error de conexión");
