@@ -89,7 +89,7 @@ const Location = () => {
                   LLAMAR
                 </a>
                 <a
-                  href="https://www.google.com/maps/place/Bocados+Restobar/"
+                  href="https://www.google.com/maps/search/?api=1&query=Carrer+dels+Caputxins%2C+4%2C+08800+Vilanova+i+la+Geltr%C3%BA%2C+Barcelona"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-outline"
