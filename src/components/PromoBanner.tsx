@@ -7,6 +7,7 @@ const PromoBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
 
   const scrollToReservas = () => {
+    sessionStorage.setItem("promo_web_20", "true");
     const el = document.getElementById("reservas");
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
