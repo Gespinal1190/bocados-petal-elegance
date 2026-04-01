@@ -69,6 +69,7 @@ const Reservations = () => {
         toast.error("Error al enviar la reserva. Inténtalo de nuevo.");
       } else {
         toast.success("¡Reserva enviada! Te confirmaremos pronto.");
+        sessionStorage.removeItem("promo_web_20");
         setFormData({ name: "", email: "", phone: "", date: "", time: "", guests: "2", notes: "" });
 
         // Notify via Telegram (fire and forget)
