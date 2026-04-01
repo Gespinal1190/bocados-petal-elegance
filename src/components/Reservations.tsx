@@ -50,6 +50,11 @@ const Reservations = () => {
     }
 
     try {
+      const isPromo = sessionStorage.getItem("promo_web_20") === "true";
+      const finalNotes = isPromo
+        ? `🎉 PROMO WEB 20% DTO. ${formData.notes.trim() || ""}`
+        : formData.notes.trim() || null;
+
       const { error } = await supabase.from("reservations").insert({
         name: formData.name.trim(),
         email: formData.email.trim(),
@@ -57,13 +62,14 @@ const Reservations = () => {
         date: formData.date,
         time: formData.time,
         guests: parseInt(formData.guests),
-        notes: formData.notes.trim() || null,
+        notes: finalNotes,
       });
 
       if (error) {
         toast.error("Error al enviar la reserva. Inténtalo de nuevo.");
       } else {
         toast.success("¡Reserva enviada! Te confirmaremos pronto.");
+        sessionStorage.removeItem("promo_web_20");
         setFormData({ name: "", email: "", phone: "", date: "", time: "", guests: "2", notes: "" });
 
         // Notify via Telegram (fire and forget)
