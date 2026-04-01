@@ -7,10 +7,12 @@ import Reservations from "@/components/Reservations";
 import Location from "@/components/Location";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import PromoBanner from "@/components/PromoBanner";
 
 const Index = () => {
   return (
     <main className="min-h-screen bg-background">
+      <PromoBanner />
       <Navbar />
       <Hero />
       <About />
