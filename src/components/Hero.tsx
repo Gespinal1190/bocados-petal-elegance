@@ -1,51 +1,36 @@
-import { useParallax } from "@/hooks/use-scroll-animation";
+import heroImage from "@/assets/hero-restaurant.jpg";
 
 const Hero = () => {
-  const { ref: parallaxRef } = useParallax(0.3);
-
   return (
     <section
       id="inicio"
-      ref={parallaxRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative flex min-h-[calc(100svh-44px)] flex-col items-center overflow-hidden bg-background px-5 pb-16 pt-32 text-center md:px-10 md:pb-24 md:pt-40"
     >
-      {/* Background Video */}
-      <div className="absolute inset-0">
+      <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center">
+        <p className="mb-7 text-[10px] font-medium uppercase tracking-[0.28em] text-primary md:text-xs">
+          Vilanova i la Geltrú · Desde primera hora
+        </p>
+        <h1 className="max-w-5xl font-display text-6xl leading-[0.95] text-foreground sm:text-7xl md:text-8xl lg:text-[8.5rem]">
+          La esencia de lo <em className="font-normal text-primary">auténtico</em> en cada bocado
+        </h1>
+        <p className="mt-8 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
+          Desayunos, comidas, meriendas y cenas en el corazón de Vilanova.
+        </p>
+        <a href="#reservas" className="btn-primary mt-9">Reservar mesa</a>
+      </div>
+
+      <div className="relative mt-14 w-full max-w-6xl overflow-hidden md:mt-20">
         <video
           autoPlay
           muted
           loop
           playsInline
-          className="w-full h-full object-cover"
+          poster={heroImage}
+          className="aspect-[16/9] w-full object-cover md:aspect-[2/1]"
         >
           <source src="/videos/hero-video.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-foreground/50" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 text-center px-4">
-        <p
-          className="font-display italic text-2xl md:text-3xl lg:text-4xl text-primary-foreground/90 mb-4 animate-fade-in opacity-0"
-          style={{ animationDelay: "0.3s", animationFillMode: "forwards" }}
-        >
-          Bienvenido
-        </p>
-
-        <h1
-          className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground tracking-[0.05em] uppercase mb-10 animate-fade-in opacity-0"
-          style={{ animationDelay: "0.6s", animationFillMode: "forwards" }}
-        >
-          Bocados Restobar
-        </h1>
-
-        <a
-          href="#reservas"
-          className="inline-block px-10 py-3.5 border border-primary-foreground/60 text-primary-foreground text-xs font-medium tracking-[0.3em] uppercase hover:bg-primary-foreground/10 transition-all duration-300 animate-fade-in opacity-0"
-          style={{ animationDelay: "0.9s", animationFillMode: "forwards" }}
-        >
-          RESERVAS
-        </a>
+        <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-foreground/10" />
       </div>
     </section>
   );

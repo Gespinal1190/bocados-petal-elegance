@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { supabase } from "@/integrations/supabase/client";
+import { ImageOff } from "lucide-react";
 
 import dishCrepe from "@/assets/dish-crepe.jpg";
 import dishWaffle from "@/assets/dish-waffle.jpg";
@@ -53,8 +53,6 @@ const fallbackImages: Record<string, string> = {
 const Menu = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
-
   useEffect(() => {
     const fetchData = async () => {
       const { data: itemsData } = await supabase
@@ -78,23 +76,16 @@ const Menu = () => {
   };
 
   return (
-    <section id="menu" className="section-padding bg-secondary/30 overflow-hidden">
-      <div className="container-custom px-4">
-        <div
-          ref={headerRef}
-          className={`text-center mb-14 transition-all duration-700 ${
-            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-        >
-          <p className="text-xs font-medium tracking-[0.3em] uppercase text-primary mb-4">
-            Nuestra Carta
-          </p>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground">
-            Menú
-          </h2>
-          <div className="divider-line mt-6">
-            <span className="text-primary text-lg">◆</span>
+    <section id="menu" className="section-padding overflow-hidden">
+      <div className="container-custom">
+        <div className="mb-16 flex flex-col gap-6 border-b border-foreground/15 pb-8 md:mb-24 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.28em] text-primary">Nuestra carta</p>
+            <h2 className="font-display text-5xl leading-none text-foreground md:text-7xl">Cuatro favoritos</h2>
           </div>
+          <p className="max-w-sm text-sm leading-relaxed text-muted-foreground md:text-right">
+            Una selección breve para saborear Bocados de principio a fin.
+          </p>
         </div>
 
         {loading ? (
@@ -102,36 +93,41 @@ const Menu = () => {
             <p className="text-muted-foreground">Cargando menú...</p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="grid gap-12 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
             {menuItems.map((item, index) => (
               <div
                 key={item.id}
-                className="bg-card overflow-hidden group hover:shadow-lg transition-all duration-500 border border-border/50 animate-scale-in"
+                className={`group animate-scale-in ${index % 2 === 1 ? "lg:mt-16" : ""}`}
                 style={{ animationDelay: `${index * 60}ms` }}
               >
-                {getItemImage(item) && (
-                  <div className="relative h-56 overflow-hidden">
+                <div className="relative mb-7 aspect-[3/4] overflow-hidden bg-muted">
+                  {getItemImage(item) ? (
                     <img
-                      src={getItemImage(item)!}
+                      src={getItemImage(item) ?? undefined}
                       alt={item.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      className="h-full w-full object-cover grayscale-[25%] transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0"
                       loading="lazy"
                       decoding="async"
                     />
-                  </div>
-                )}
-                <div className="p-6">
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <h3 className="font-display text-xl font-semibold text-foreground">
+                  ) : (
+                    <div className="flex h-full flex-col items-center justify-center gap-3 text-muted-foreground">
+                      <ImageOff className="h-7 w-7" />
+                      <span className="text-[10px] uppercase tracking-[0.18em]">Sin imagen</span>
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <div className="mb-3 flex items-start justify-between gap-3">
+                    <h3 className="font-display text-2xl text-foreground">
                       {item.name}
                     </h3>
                     {item.price && (
-                      <span className="text-primary font-semibold whitespace-nowrap">
+                      <span className="whitespace-nowrap text-sm font-medium text-primary">
                         {item.price.toFixed(2)}€
                       </span>
                     )}
                   </div>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
                     {item.description}
                   </p>
                 </div>
@@ -140,8 +136,8 @@ const Menu = () => {
           </div>
         )}
 
-        <div className="text-center mt-14">
-          <p className="text-muted-foreground text-sm">
+        <div className="mt-20 border-t border-foreground/15 pt-6 text-center">
+          <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
             Pregunta por nuestras sugerencias del día y opciones para alérgenos
           </p>
         </div>

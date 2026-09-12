@@ -37,62 +37,59 @@ const Location = () => {
   ];
 
   return (
-    <section id="ubicacion" className="section-padding bg-secondary/30 overflow-hidden">
-      <div className="container-custom px-4">
+    <section id="ubicacion" className="section-padding overflow-hidden bg-secondary">
+      <div className="container-custom">
         <div
           ref={sectionRef}
           className={`transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <div className="text-center mb-14">
-            <p className="text-xs font-medium tracking-[0.3em] uppercase text-primary mb-4">
+          <div className="mb-16 text-center md:mb-24">
+            <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.28em] text-primary">
               Encuéntranos
             </p>
-            <h2 className="font-display text-4xl md:text-5xl font-semibold text-foreground">
-              Ubicación y Horarios
+            <h2 className="font-display text-5xl leading-none text-foreground md:text-7xl">
+              Ven a <em>visitarnos</em>
             </h2>
-            <div className="divider-line mt-6">
-              <span className="text-primary text-lg">◆</span>
-            </div>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <div className="grid gap-0 border border-primary/20 lg:grid-cols-[0.8fr_1.2fr]">
             {/* Info */}
-            <div className="space-y-8">
+            <div className="space-y-10 bg-primary p-7 text-primary-foreground md:p-12">
               <div>
-                <h3 className="text-xs font-medium tracking-[0.2em] uppercase text-primary mb-3">Dirección</h3>
-                <p className="text-muted-foreground leading-relaxed">{settings.address}</p>
+                <h3 className="mb-3 text-[10px] font-medium uppercase tracking-[0.2em] text-secondary">Dirección</h3>
+                <p className="font-display text-2xl leading-snug">{settings.address}</p>
               </div>
               <div>
-                <h3 className="text-xs font-medium tracking-[0.2em] uppercase text-primary mb-3">Teléfono</h3>
+                <h3 className="mb-3 text-[10px] font-medium uppercase tracking-[0.2em] text-secondary">Teléfono</h3>
                 <a
                   href={`tel:${settings.phone.replace(/\s/g, "")}`}
-                  className="text-foreground hover:text-primary transition-colors text-lg"
+                  className="text-xl transition-colors hover:text-secondary"
                 >
                   {settings.phone}
                 </a>
               </div>
               <div>
-                <h3 className="text-xs font-medium tracking-[0.2em] uppercase text-primary mb-3">Horarios</h3>
+                <h3 className="mb-3 text-[10px] font-medium uppercase tracking-[0.2em] text-secondary">Horarios</h3>
                 <div className="space-y-2">
                   {scheduleData.map((schedule, index) => (
                     <div key={index} className="flex justify-between text-sm max-w-xs">
-                      <span className="text-muted-foreground">{schedule.days}</span>
-                      <span className="font-medium text-foreground">{schedule.hours}</span>
+                      <span className="text-primary-foreground/65">{schedule.days}</span>
+                      <span className="font-medium">{schedule.hours}</span>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="flex gap-4 pt-4">
-                <a href={`tel:${settings.phone.replace(/\s/g, "")}`} className="btn-primary">
+              <div className="flex flex-wrap gap-3 pt-4">
+                <a href={`tel:${settings.phone.replace(/\s/g, "")}`} className="border border-primary-foreground/50 px-6 py-3 text-xs uppercase tracking-[0.14em] transition-colors hover:bg-primary-foreground hover:text-primary">
                   LLAMAR
                 </a>
                 <a
                   href="https://www.google.com/maps/search/?api=1&query=Carrer+dels+Caputxins%2C+4%2C+08800+Vilanova+i+la+Geltr%C3%BA%2C+Barcelona"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-outline"
+                  className="bg-primary-foreground px-6 py-3 text-xs uppercase tracking-[0.14em] text-primary transition-opacity hover:opacity-80"
                 >
                   GOOGLE MAPS
                 </a>
@@ -100,7 +97,7 @@ const Location = () => {
             </div>
 
             {/* Map */}
-            <div className="overflow-hidden h-[400px] lg:h-auto border border-border">
+            <div className="h-[420px] overflow-hidden lg:h-auto">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2994.454885770531!2d1.721627!3d41.2239686!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a381f1492a7533%3A0x6aa1bb7f7159cd79!2sBocados%20Restobar!5e0!3m2!1ses!2ses!4v1700000000000!5m2!1ses!2ses"
                 width="100%"

@@ -112,35 +112,35 @@ const Reservations = () => {
   };
 
   return (
-    <section id="reservas" className="section-padding bg-primary/5 overflow-hidden">
-      <div className="container-custom px-4">
+    <section id="reservas" className="section-padding overflow-hidden bg-background">
+      <div className="container-custom grid gap-16 lg:grid-cols-[0.75fr_1.25fr] lg:gap-24">
         <div
           ref={headerRef}
-          className={`text-center mb-14 transition-all duration-700 ${
+          className={`text-left transition-all duration-700 ${
             headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <p className="text-xs font-medium tracking-[0.3em] uppercase text-primary mb-4">
-            Reserva tu Mesa
+          <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.28em] text-primary">
+            Tu mesa te espera
           </p>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground">
-            Reservas
+          <h2 className="font-display text-6xl leading-none text-foreground md:text-8xl">
+            Reserva sin <em>prisa.</em>
           </h2>
-          <div className="divider-line mt-6">
-            <span className="text-primary text-lg">◆</span>
-          </div>
-          <p className="text-muted-foreground mt-6 max-w-lg mx-auto">
-            Reserva tu mesa y disfruta de una experiencia gastronómica única
+          <p className="mt-8 max-w-md text-base leading-relaxed text-muted-foreground">
+            Elige el día y la hora. Te confirmaremos la reserva lo antes posible.
           </p>
+          <div className="mt-10 border-l border-primary pl-5 text-sm leading-relaxed text-muted-foreground">
+            Martes a sábado · 09:30–23:00<br />Domingo y lunes · Cerrado
+          </div>
         </div>
 
         <div
           ref={formRef}
-          className={`max-w-2xl mx-auto transition-all duration-700 delay-200 ${
+          className={`transition-all duration-700 delay-200 ${
             formVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <div className="bg-card p-8 md:p-10 border border-border">
+          <div className="border border-foreground/15 bg-card p-6 shadow-soft md:p-10">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
@@ -250,7 +250,7 @@ const Reservations = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full btn-primary py-4" disabled={isSubmitting}>
+              <Button type="submit" className="h-14 w-full rounded-none text-xs uppercase tracking-[0.16em]" disabled={isSubmitting}>
                 {isSubmitting ? "Enviando..." : "RESERVAR MESA"}
               </Button>
             </form>

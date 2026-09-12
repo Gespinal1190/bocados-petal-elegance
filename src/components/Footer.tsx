@@ -6,15 +6,15 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-foreground text-primary-foreground py-16">
-      <div className="container-custom px-4">
-        <div className="text-center mb-10">
+    <footer className="bg-foreground px-5 py-20 text-primary-foreground md:px-10 md:py-28">
+      <div className="container-custom">
+        <div className="mb-16 text-center">
           <img
             src={logoBocados}
             alt="Bocados Restobar"
-            className="h-14 w-auto brightness-0 invert mx-auto mb-6"
+            className="mx-auto mb-10 h-16 w-auto brightness-0 invert"
           />
-          <div className="flex flex-wrap justify-center gap-8 text-xs tracking-[0.2em] uppercase">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[10px] uppercase tracking-[0.16em]">
             <a href="#inicio" className="hover:opacity-70 transition-opacity">Inicio</a>
             <a href="#nosotros" className="hover:opacity-70 transition-opacity">Nosotros</a>
             <a href="#menu" className="hover:opacity-70 transition-opacity">Menú</a>
@@ -24,7 +24,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex flex-col items-center justify-between gap-5 border-t border-primary-foreground/10 pt-8 sm:flex-row">
           <p className="text-xs text-primary-foreground/50">
             © {currentYear} Bocados Restobar — Todos los derechos reservados.
           </p>
