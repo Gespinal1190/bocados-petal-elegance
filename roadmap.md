@@ -5,4 +5,4 @@
 - [x] Rediseñar Nosotros, menú y galería
 - [x] Rediseñar reservas, ubicación y pie
 - [x] Validar escritorio, móvil y acciones principales
-- [ ] Replicar el ritmo de desplazamiento de la referencia con contenido de Bocados
+- [x] Replicar el ritmo de desplazamiento de la referencia con contenido de Bocados
