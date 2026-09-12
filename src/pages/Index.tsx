@@ -8,12 +8,14 @@ import Location from "@/components/Location";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import PromoBanner from "@/components/PromoBanner";
+import FloatingLogo from "@/components/FloatingLogo";
 
 const Index = () => {
   return (
     <main className="min-h-screen bg-background">
       <PromoBanner />
       <Navbar />
+      <FloatingLogo />
       <Hero />
       <Menu />
       <Gallery />

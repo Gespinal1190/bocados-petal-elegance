@@ -127,6 +127,11 @@
   .menu-marquee-track {
     transition: transform 80ms linear;
   }
+
+  .floating-bocados-logo {
+    transition: transform 120ms linear, opacity 300ms ease;
+    will-change: transform;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -139,6 +144,11 @@
 
   .menu-marquee-track {
     transform: none !important;
+  }
+
+  .floating-bocados-logo {
+    transform: none !important;
+    transition: none !important;
   }
 }
 

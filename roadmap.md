@@ -7,3 +7,4 @@
 - [x] Validar escritorio, móvil y acciones principales
 - [x] Replicar el ritmo de desplazamiento de la referencia con contenido de Bocados
 - [x] Añadir la foto de Crepes Dulces y centrar el encuadre del pulpo
+- [ ] Añadir el logo de Bocados flotante en el fondo
