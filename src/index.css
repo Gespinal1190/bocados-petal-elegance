@@ -113,6 +113,20 @@
     content: '';
     @apply h-px w-12 md:w-20 bg-primary/30;
   }
+
+  .hero-outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px hsl(var(--primary-foreground));
+  }
+
+  .menu-outline-text {
+    color: transparent;
+    -webkit-text-stroke: 1.5px hsl(var(--primary));
+  }
+
+  .menu-marquee-track {
+    transition: transform 80ms linear;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -121,6 +135,10 @@
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .menu-marquee-track {
+    transform: none !important;
   }
 }
 
