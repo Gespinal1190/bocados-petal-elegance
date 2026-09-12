@@ -1,107 +1,64 @@
-import { useState, useEffect } from "react";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getLocalFallback } from "@/components/OptimizedImage";
-import heroImage from "@/assets/hero-restaurant.jpg";
-import dishCrepe from "@/assets/dish-crepe.jpg";
-import dishWaffle from "@/assets/dish-waffle.jpg";
-import dishEntrecot from "@/assets/dish-entrecot.jpg";
-import coffeeSpecialty from "@/assets/coffee-specialty.jpg";
-import dishToast from "@/assets/dish-toast.jpg";
-import dishPulpo from "@/assets/dish-pulpo.jpg";
-import dishBurger from "@/assets/dish-burger.jpg";
+import { useScrollProgress } from "@/hooks/use-scroll-animation";
 
-type GalleryImage = {
-  id: string;
-  image_url: string;
-  alt_text: string | null;
-};
-
-const defaultImages = [
-  { src: heroImage, alt: "Interior del restaurante", span: "col-span-2 row-span-2" },
-  { src: dishCrepe, alt: "Crepes con frutas frescas", span: "" },
-  { src: coffeeSpecialty, alt: "Café latte art", span: "" },
-  { src: dishEntrecot, alt: "Entrecot a la brasa", span: "col-span-2" },
-  { src: dishWaffle, alt: "Gofres con chocolate y fresas", span: "" },
-  { src: dishToast, alt: "Tostada de desayuno", span: "" },
-  { src: dishPulpo, alt: "Pulpo a la gallega", span: "" },
-  { src: dishBurger, alt: "Burger gourmet", span: "" },
-];
-
-const spanClasses = ["col-span-2 row-span-2", "", "", "col-span-2", "", "", "", ""];
+type GalleryImage = { id: string; image_url: string; alt_text: string | null };
 
 const Gallery = () => {
   const [images, setImages] = useState<GalleryImage[]>([]);
-  const [useDatabase, setUseDatabase] = useState(false);
-  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
-  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation({ threshold: 0.1 });
+  const [loading, setLoading] = useState(true);
+  const { ref, progress } = useScrollProgress();
 
   useEffect(() => {
     const fetchImages = async () => {
-      const { data, error } = await supabase
-        .from("gallery_images")
-        .select("*")
-        .eq("is_active", true)
-        .order("sort_order");
-
-      if (!error && data) {
-        setImages(data);
-        setUseDatabase(true);
-      }
+      const { data, error } = await supabase.from("gallery_images").select("*").eq("is_active", true).order("sort_order");
+      if (!error && data) setImages(data);
+      setLoading(false);
     };
-
     fetchImages();
   }, []);
 
-  const displayImages = useDatabase
-    ? images.map((img, i) => ({
-        src: getLocalFallback(img.image_url) || img.image_url,
-        alt: img.alt_text || "Imagen del restaurante",
-        span: spanClasses[i % spanClasses.length],
-      }))
-    : defaultImages;
+  const displayImages = images.slice(0, 5).map((image) => ({
+    src: getLocalFallback(image.image_url) || image.image_url,
+    alt: image.alt_text || "Imagen de Bocados Restobar",
+  }));
 
-  if (useDatabase && images.length === 0) return null;
+  if (loading || displayImages.length === 0) return null;
+  const slideProgress = progress * Math.max(displayImages.length - 1, 1);
 
   return (
-    <section id="galeria" className="section-padding overflow-hidden bg-secondary">
-      <div className="container-custom">
-        <div
-          ref={headerRef}
-          className={`mb-16 text-center transition-all duration-700 md:mb-24 ${
-            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-        >
-          <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.28em] text-primary">
-            La experiencia
-          </p>
-          <h2 className="mx-auto max-w-3xl font-display text-5xl leading-none text-foreground md:text-7xl">
-            Bocados para <em>recordar</em>
-          </h2>
+    <section id="galeria" className="bg-background">
+      <div className="flex min-h-[70svh] items-center justify-center px-5 py-24 text-center">
+        <div>
+          <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">La experiencia</p>
+          <h2 className="font-body text-6xl font-black uppercase leading-[0.9] text-foreground md:text-8xl">El local</h2>
         </div>
-
-        <div
-          ref={gridRef}
-          className="grid auto-rows-[180px] grid-cols-2 gap-3 md:auto-rows-[260px] md:grid-cols-4 md:gap-5"
-        >
-          {displayImages.map((image, index) => (
-            <div
-              key={index}
-              className={`group relative overflow-hidden ${image.span} transition-all duration-700 ${
-                gridVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
-              }`}
-              style={{ transitionDelay: `${index * 80}ms` }}
-            >
-              <img
-                src={image.src}
-                alt={image.alt}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                loading="lazy"
-                decoding="async"
-              />
-              <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/30 transition-all duration-300" />
-            </div>
-          ))}
+      </div>
+      <div ref={ref} className="relative" style={{ height: `${displayImages.length * 100}svh` }}>
+        <div className="sticky top-0 h-[100svh] overflow-hidden bg-foreground">
+          {displayImages.map((image, index) => {
+            const localProgress = index === 0 ? 1 : Math.min(Math.max(slideProgress - (index - 1), 0), 1);
+            return (
+              <figure
+                key={index}
+                className="absolute inset-0 overflow-hidden will-change-[clip-path]"
+                style={{ zIndex: index + 1, clipPath: `inset(0 0 0 ${100 - localProgress * 100}%)` }}
+              >
+                <img src={image.src} alt={image.alt} className="h-full w-full scale-105 object-cover blur-sm" loading="lazy" decoding="async" />
+                <div className="absolute inset-0 bg-foreground/20" />
+                <div className="absolute inset-0 flex items-center justify-center p-6">
+                  <div className="w-[72vw] max-w-md bg-card p-2 shadow-elevated md:p-3">
+                    <img src={image.src} alt="" className="aspect-[4/5] w-full object-cover" loading="lazy" decoding="async" />
+                    <figcaption className="px-3 py-4 text-center text-[10px] font-medium uppercase tracking-[0.12em] text-card-foreground">{image.alt}</figcaption>
+                  </div>
+                </div>
+              </figure>
+            );
+          })}
+          <div className="absolute bottom-6 right-6 z-20 bg-card px-3 py-2 text-[10px] font-semibold text-card-foreground">
+            {Math.min(Math.floor(slideProgress) + 1, displayImages.length)} / {displayImages.length}
+          </div>
         </div>
       </div>
     </section>
