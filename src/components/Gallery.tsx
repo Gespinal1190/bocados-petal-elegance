@@ -64,33 +64,30 @@ const Gallery = () => {
   if (useDatabase && images.length === 0) return null;
 
   return (
-    <section id="galeria" className="section-padding overflow-hidden">
-      <div className="container-custom px-4">
+    <section id="galeria" className="section-padding overflow-hidden bg-secondary">
+      <div className="container-custom">
         <div
           ref={headerRef}
-          className={`text-center mb-14 transition-all duration-700 ${
+          className={`mb-16 text-center transition-all duration-700 md:mb-24 ${
             headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <p className="text-xs font-medium tracking-[0.3em] uppercase text-primary mb-4">
-            Nuestro Espacio
+          <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.28em] text-primary">
+            La experiencia
           </p>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground">
-            Galería
+          <h2 className="mx-auto max-w-3xl font-display text-5xl leading-none text-foreground md:text-7xl">
+            Bocados para <em>recordar</em>
           </h2>
-          <div className="divider-line mt-6">
-            <span className="text-primary text-lg">◆</span>
-          </div>
         </div>
 
         <div
           ref={gridRef}
-          className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 max-w-6xl mx-auto auto-rows-[200px] md:auto-rows-[240px]"
+          className="grid auto-rows-[180px] grid-cols-2 gap-3 md:auto-rows-[260px] md:grid-cols-4 md:gap-5"
         >
           {displayImages.map((image, index) => (
             <div
               key={index}
-              className={`relative overflow-hidden group cursor-pointer ${image.span} transition-all duration-700 ${
+              className={`group relative overflow-hidden ${image.span} transition-all duration-700 ${
                 gridVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
               }`}
               style={{ transitionDelay: `${index * 80}ms` }}
