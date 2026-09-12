@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ImageOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useScrollProgress } from "@/hooks/use-scroll-animation";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type MenuItem = {
   id: string;
@@ -16,6 +17,7 @@ const Menu = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
   const { ref, progress } = useScrollProgress();
+  const isMobile = useIsMobile();
 
   const getImagePosition = (name: string) =>
     name.toLocaleLowerCase("es").includes("pulpo") ? "object-[center_72%]" : "object-center";
@@ -46,15 +48,19 @@ const Menu = () => {
           {menuItems.map((item, index) => (
             <div
               key={item.id}
-              className="menu-marquee-track flex w-max items-center gap-7 will-change-transform md:gap-14"
-              style={{ transform: `translate3d(${(index % 2 === 0 ? -1 : 1) * (progress * 24 - 12)}vw, 0, 0)` }}
+              className="menu-marquee-track flex w-max items-center gap-5 will-change-transform md:gap-14"
+              style={{
+                transform: isMobile
+                  ? `translate3d(${12 + (index % 2 === 0 ? -1 : 1) * (progress * 12 - 6)}vw, 0, 0)`
+                  : `translate3d(${(index % 2 === 0 ? -1 : 1) * (progress * 24 - 12)}vw, 0, 0)`,
+              }}
             >
               {[0, 1, 2].map((copy) => (
-                <div key={copy} className="flex items-center gap-7 md:gap-14" aria-hidden={copy > 0}>
-                  <span className={`whitespace-nowrap font-display text-5xl font-normal leading-none md:text-[6.5rem] ${copy % 2 ? "menu-outline-text" : "text-primary"}`}>
+                <div key={copy} className="flex items-center gap-5 md:gap-14" aria-hidden={copy > 0}>
+                  <span className={`order-2 whitespace-nowrap font-display text-[2.75rem] font-normal leading-none md:order-none md:text-[6.5rem] ${copy % 2 ? "menu-outline-text" : "text-primary"}`}>
                     {item.name}
                   </span>
-                  <div className="h-40 w-60 shrink-0 overflow-hidden rounded-md bg-muted shadow-card md:h-64 md:w-96">
+                  <div className="order-1 aspect-[3/2] w-[82vw] shrink-0 overflow-hidden rounded-md bg-muted shadow-card md:order-none md:h-72 md:w-[28rem]">
                     {item.image_url ? (
                       <img
                         src={item.image_url}
