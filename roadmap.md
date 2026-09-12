@@ -6,3 +6,4 @@
 - [x] Rediseñar reservas, ubicación y pie
 - [x] Validar escritorio, móvil y acciones principales
 - [x] Replicar el ritmo de desplazamiento de la referencia con contenido de Bocados
+- [ ] Añadir la foto de Crepes Dulces y centrar el encuadre del pulpo
