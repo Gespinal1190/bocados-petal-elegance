@@ -17,6 +17,9 @@ const Menu = () => {
   const [loading, setLoading] = useState(true);
   const { ref, progress } = useScrollProgress();
 
+  const getImagePosition = (name: string) =>
+    name.toLocaleLowerCase("es").includes("pulpo") ? "object-[center_72%]" : "object-center";
+
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await supabase.from("menu_items").select("*").eq("is_active", true).order("sort_order");
@@ -50,7 +53,15 @@ const Menu = () => {
                   </span>
                   <div className="h-28 w-44 shrink-0 overflow-hidden rounded-lg bg-muted shadow-soft md:h-40 md:w-64">
                     {item.image_url ? (
-                      <img src={item.image_url} alt={item.name} className="h-full w-full object-cover" loading="lazy" decoding="async" />
+                      <img
+                        src={item.image_url}
+                        alt={item.name}
+                        className={`h-full w-full object-cover ${getImagePosition(item.name)}`}
+                        loading="lazy"
+                        decoding="async"
+                        width={256}
+                        height={160}
+                      />
                     ) : (
                       <div className="flex h-full flex-col items-center justify-center gap-3 text-muted-foreground">
                         <ImageOff className="h-7 w-7" />
