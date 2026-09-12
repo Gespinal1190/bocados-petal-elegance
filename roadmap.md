@@ -8,3 +8,4 @@
 - [x] Replicar el ritmo de desplazamiento de la referencia con contenido de Bocados
 - [x] Añadir la foto de Crepes Dulces y centrar el encuadre del pulpo
 - [x] Añadir el logo de Bocados flotante en el fondo
+- [ ] Mejorar Nuestra carta con imágenes más grandes y textos armónicos, manteniendo el efecto actual
