@@ -18,7 +18,7 @@ const Menu = () => {
   const { ref, progress } = useScrollProgress();
 
   const getImagePosition = (name: string) =>
-    name.toLocaleLowerCase("es").includes("pulpo") ? "object-center" : "object-center";
+    name.toLocaleLowerCase("es").includes("pulpo") ? "object-[center_72%]" : "object-center";
 
   useEffect(() => {
     const fetchData = async () => {
