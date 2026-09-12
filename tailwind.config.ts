@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Playfair Display", "Georgia", "serif"],
-        body: ["Lato", "system-ui", "sans-serif"],
+        display: ["Instrument Serif", "Georgia", "serif"],
+        body: ["Work Sans", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -62,6 +62,7 @@ export default {
         },
         cream: "hsl(var(--cream))",
         "warm-gray": "hsl(var(--warm-gray))",
+        whatsapp: "hsl(var(--whatsapp))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

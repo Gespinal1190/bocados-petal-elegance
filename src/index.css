@@ -1,72 +1,65 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Lato:wght@300;400;500;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Bocados Restobar — Olive & Beige Elegant Theme */
+/* Bocados Restobar — editorial green & ivory */
 
 @layer base {
   :root {
-    /* Warm beige/cream background */
-    --background: 38 35% 96%;
-    --foreground: 30 10% 15%;
+    --background: 38 33% 94%;
+    --foreground: 20 11% 11%;
 
-    /* Card surfaces - warm off-white */
-    --card: 38 30% 98%;
-    --card-foreground: 30 10% 15%;
+    --card: 38 33% 97%;
+    --card-foreground: 20 11% 11%;
 
-    --popover: 38 30% 98%;
-    --popover-foreground: 30 10% 15%;
+    --popover: 38 33% 97%;
+    --popover-foreground: 20 11% 11%;
 
-    /* Primary - Deep Olive Green */
-    --primary: 90 20% 35%;
-    --primary-foreground: 38 35% 96%;
+    --primary: 140 43% 21%;
+    --primary-foreground: 38 33% 94%;
 
-    /* Secondary - Warm Sand Beige */
-    --secondary: 38 25% 90%;
-    --secondary-foreground: 30 15% 25%;
+    --secondary: 101 54% 83%;
+    --secondary-foreground: 140 43% 17%;
 
-    /* Muted - Soft warm gray */
-    --muted: 38 15% 92%;
-    --muted-foreground: 30 10% 50%;
+    --muted: 38 20% 88%;
+    --muted-foreground: 20 8% 40%;
 
-    /* Accent - Warm Gold */
-    --accent: 38 50% 50%;
-    --accent-foreground: 38 35% 96%;
+    --accent: 101 54% 83%;
+    --accent-foreground: 140 43% 17%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 38 35% 96%;
 
     /* Borders - warm beige */
-    --border: 38 20% 88%;
-    --input: 38 20% 88%;
-    --ring: 90 20% 35%;
+    --border: 140 18% 76%;
+    --input: 38 18% 84%;
+    --ring: 140 43% 21%;
 
-    --radius: 0.5rem;
+    --radius: 0.25rem;
 
     /* Custom accent colors */
-    --olive: 90 20% 35%;
-    --olive-light: 90 15% 50%;
-    --olive-dark: 90 25% 25%;
-    --sand: 38 30% 88%;
-    --sand-light: 38 35% 94%;
-    --cream: 38 35% 96%;
-    --warm-gray: 30 10% 40%;
+    --olive: 140 43% 21%;
+    --olive-light: 101 54% 83%;
+    --olive-dark: 140 43% 15%;
+    --sand: 38 20% 88%;
+    --sand-light: 38 33% 94%;
+    --cream: 38 33% 94%;
+    --warm-gray: 20 8% 40%;
+    --whatsapp: 142 70% 45%;
 
     /* Shadows */
-    --shadow-soft: 0 2px 15px hsla(30, 10%, 20%, 0.06);
-    --shadow-card: 0 4px 25px hsla(30, 10%, 20%, 0.08);
-    --shadow-elevated: 0 12px 40px hsla(30, 10%, 20%, 0.12);
+    --shadow-soft: 0 8px 30px hsl(var(--foreground) / 0.06);
+    --shadow-card: 0 14px 40px hsl(var(--foreground) / 0.08);
+    --shadow-elevated: 0 20px 60px hsl(var(--foreground) / 0.14);
 
-    --sidebar-background: 38 35% 96%;
-    --sidebar-foreground: 30 10% 40%;
-    --sidebar-primary: 90 20% 35%;
-    --sidebar-primary-foreground: 38 35% 96%;
-    --sidebar-accent: 38 15% 92%;
-    --sidebar-accent-foreground: 30 10% 40%;
-    --sidebar-border: 38 20% 88%;
-    --sidebar-ring: 90 20% 35%;
+    --sidebar-background: 38 33% 94%;
+    --sidebar-foreground: 20 8% 40%;
+    --sidebar-primary: 140 43% 21%;
+    --sidebar-primary-foreground: 38 33% 94%;
+    --sidebar-accent: 101 54% 83%;
+    --sidebar-accent-foreground: 140 43% 17%;
+    --sidebar-border: 140 18% 76%;
+    --sidebar-ring: 140 43% 21%;
   }
 }
 
@@ -81,6 +74,7 @@
 
   body {
     @apply bg-background text-foreground font-body antialiased;
+    letter-spacing: 0;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -90,11 +84,11 @@
 
 @layer components {
   .section-padding {
-    @apply py-20 md:py-28 px-4 md:px-8;
+    @apply py-24 md:py-36 px-5 md:px-10;
   }
 
   .container-custom {
-    @apply max-w-7xl mx-auto;
+    @apply max-w-[1400px] mx-auto;
   }
 
   .card-elegant {
@@ -103,11 +97,11 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center px-8 py-3 bg-primary text-primary-foreground font-medium tracking-[0.2em] uppercase text-xs transition-all duration-300 hover:opacity-90;
+    @apply inline-flex items-center justify-center px-8 py-3.5 bg-primary text-primary-foreground font-medium tracking-[0.16em] uppercase text-xs transition-all duration-300 hover:bg-foreground;
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center px-8 py-3 border border-primary text-foreground font-medium tracking-[0.2em] uppercase text-xs transition-all duration-300 hover:bg-primary hover:text-primary-foreground;
+    @apply inline-flex items-center justify-center px-8 py-3.5 border border-primary text-primary font-medium tracking-[0.16em] uppercase text-xs transition-all duration-300 hover:bg-primary hover:text-primary-foreground;
   }
 
   .divider-line {
@@ -118,6 +112,15 @@
   .divider-line::after {
     content: '';
     @apply h-px w-12 md:w-20 bg-primary/30;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
