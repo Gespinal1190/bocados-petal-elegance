@@ -1,3 +1,5 @@
+import heroImage from "@/assets/hero-restaurant.jpg";
+
 const Hero = () => {
   return (
     <section
@@ -23,6 +25,7 @@ const Hero = () => {
           muted
           loop
           playsInline
+          poster={heroImage}
           className="aspect-[16/9] w-full object-cover md:aspect-[2/1]"
         >
           <source src="/videos/hero-video.mp4" type="video/mp4" />
