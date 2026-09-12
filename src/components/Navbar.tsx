@@ -15,16 +15,16 @@ const Navbar = () => {
 
   return (
     <nav
-      className="fixed left-0 right-0 top-11 z-50 px-4 py-3 transition-all duration-500 md:px-8"
+      className="fixed left-0 right-0 top-11 z-50 px-4 py-3 transition-all duration-500"
     >
-      <div className="mx-auto max-w-5xl border border-primary-foreground/25 bg-primary/95 shadow-soft backdrop-blur-md">
+      <div className={`mx-auto overflow-hidden border border-primary-foreground/25 bg-primary/95 shadow-soft backdrop-blur-md transition-all duration-500 ${isOpen ? "max-w-xl rounded-lg" : "max-w-sm rounded-full md:max-w-4xl"}`}>
         <div className="flex h-14 items-center justify-between px-3 md:px-5">
           {/* Logo */}
           <a href="#inicio" className="flex items-center">
             <img
               src={logoBocados}
               alt="Bocados Restobar"
-              className="h-9 w-auto brightness-0 invert"
+              className="h-8 w-auto brightness-0 invert"
             />
           </a>
 
