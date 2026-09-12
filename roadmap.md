@@ -4,4 +4,4 @@
 - [x] Rediseñar cabecera, portada y promoción
 - [x] Rediseñar Nosotros, menú y galería
 - [x] Rediseñar reservas, ubicación y pie
-- [ ] Validar escritorio, móvil y acciones principales
+- [x] Validar escritorio, móvil y acciones principales
