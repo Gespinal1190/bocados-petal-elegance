@@ -8,7 +8,7 @@ const PromoBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
 
   const scrollToReservas = () => {
-    sessionStorage.setItem("promo_web_20", "true");
+    sessionStorage.setItem("promo_web_10", "true");
     const el = document.getElementById("reservas");
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
@@ -25,7 +25,7 @@ const PromoBanner = () => {
       >
         <div className="container-custom flex items-center justify-center gap-2 h-full relative">
           <span className="truncate text-[10px] font-medium uppercase tracking-[0.12em] sm:text-xs sm:tracking-[0.2em]">
-            Reserva online · <strong>20% de descuento</strong>
+            Reserva online · <strong>10% de descuento</strong>
           </span>
           <Button
             type="button"
